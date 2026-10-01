@@ -389,7 +389,9 @@
 async function claimDaily() {
   try {
     const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
-
+    
+console.log("Telegram user:", tgUser);
+console.log("Telegram initData:", window.Telegram?.WebApp?.initData);
     if (!tgUser?.id) {
       showMessage("لطفاً از داخل تلگرام وارد شوید");
       return;
