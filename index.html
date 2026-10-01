@@ -394,7 +394,7 @@ async function claimDaily() {
       showMessage("لطفاً از داخل تلگرام وارد شوید");
       return;
     }
-
+console.log("CLAIM DAILY START");
     const response = await fetch(
       "https://zpejsrxapxozwpeyvfbw.supabase.co/functions/v1/super-action",
       {
