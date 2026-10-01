@@ -386,7 +386,54 @@
 
       window.Telegram.WebApp.expand();
     }
+async function claimDaily() {
+  try {
+    const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
 
+    if (!tgUser?.id) {
+      showMessage("لطفاً از داخل تلگرام وارد شوید");
+      return;
+    }
+
+    const response = await fetch(
+      "https://zpejsrxapxozwpeyvfbw.supabase.co/functions/v1/super-action",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          telegram_user: tgUser
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!data.success) {
+      showMessage("خطا در دریافت پاداش");
+      return;
+    }
+
+    if (data.already_claimed) {
+      showMessage("🎁 پاداش امروز را قبلاً گرفتی");
+      return;
+    }
+
+    if (data.weekly_complete) {
+      showMessage("🎉 پاداش هفتگی تمام شده است");
+      return;
+    }
+
+    showMessage(
+      `🎉 روز ${data.day}: +${data.reward} امتیاز`
+    );
+
+  } catch (error) {
+    console.error(error);
+    showMessage("خطا در اتصال به سرور");
+  }
+}
   </script>
 
 </body>
