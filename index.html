@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>NEXORA</title>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -58,7 +60,6 @@
       font-size: 48px;
       font-weight: 900;
       user-select: none;
-      -webkit-user-select: none;
     }
 
     .title {
@@ -122,6 +123,7 @@
       height: 220px;
       margin: 0 auto;
       border-radius: 50%;
+
       background:
         conic-gradient(
           #00d9ff,
@@ -129,6 +131,7 @@
           #d946ef,
           #00d9ff
         );
+
       padding: 7px;
       cursor: pointer;
 
@@ -148,11 +151,6 @@
 
     .tap-circle:active {
       transform: scale(.94);
-    }
-
-    .tap-circle:focus,
-    .tap-circle:focus-visible {
-      outline: none;
     }
 
     .tap-circle.disabled {
@@ -203,30 +201,22 @@
     .plus-one {
       position: fixed;
       pointer-events: none;
-
       font-size: 28px;
       font-weight: 900;
       color: #00e5ff;
-
-      animation:
-        plusOne .8s ease-out forwards;
-
+      animation: plusOne .8s ease-out forwards;
       z-index: 999;
     }
 
     @keyframes plusOne {
       0% {
         opacity: 1;
-        transform:
-          translateY(0)
-          scale(1);
+        transform: translateY(0) scale(1);
       }
 
       100% {
         opacity: 0;
-        transform:
-          translateY(-100px)
-          scale(1.4);
+        transform: translateY(-100px) scale(1.4);
       }
     }
 
@@ -242,13 +232,9 @@
 
   <div class="app">
 
-    <div class="logo">
-      N
-    </div>
+    <div class="logo">N</div>
 
-    <div class="title">
-      NEXORA
-    </div>
+    <div class="title">NEXORA</div>
 
     <div class="subtitle">
       EARN • TAP • RISE
@@ -269,17 +255,13 @@
     <div class="limit-info">
 
       <div class="limit-count">
-        <span id="remaining">
-          1000
-        </span>
+        <span id="remaining">1000</span>
         / 1000 REQUESTS
       </div>
 
       <div class="timer">
         ⏳ Reset in
-        <span id="timer">
-          08:00:00
-        </span>
+        <span id="timer">08:00:00</span>
       </div>
 
     </div>
@@ -314,12 +296,11 @@
 
   </div>
 
-
   <script>
 
-    /*
-     * TELEGRAM
-     */
+    /* =========================
+       TELEGRAM
+    ========================= */
 
     const tg =
       window.Telegram &&
@@ -327,51 +308,41 @@
         ? window.Telegram.WebApp
         : null;
 
-
     if (tg) {
-
       tg.ready();
-
       tg.expand();
-
     }
 
 
-    /*
-     * SUPABASE EDGE FUNCTION
-     */
+    /* =========================
+       API
+    ========================= */
 
     const API_URL =
       "https://zpejsrxapxozwpeyvfbw.supabase.co/functions/v1/super-action";
 
 
-    /*
-     * POINTS
-     */
+    /* =========================
+       POINTS
+    ========================= */
 
     let points =
       Number(
-        localStorage.getItem(
-          "nexo_points"
-        )
+        localStorage.getItem("nexo_points")
       ) || 0;
 
-
-    document.getElementById(
-      "points"
-    ).innerText =
+    document.getElementById("points").innerText =
       points.toLocaleString();
 
 
-    /*
-     * RATE LIMIT
-     */
+    /* =========================
+       LIMIT
+    ========================= */
 
     const MAX_REQUESTS = 1000;
 
     const EIGHT_HOURS =
       8 * 60 * 60 * 1000;
-
 
     let remaining =
       Number(
@@ -379,7 +350,6 @@
           "nexo_remaining"
         )
       );
-
 
     let resetAt =
       Number(
@@ -394,10 +364,7 @@
       remaining < 0 ||
       remaining > MAX_REQUESTS
     ) {
-
-      remaining =
-        MAX_REQUESTS;
-
+      remaining = MAX_REQUESTS;
     }
 
 
@@ -405,14 +372,11 @@
       !Number.isFinite(resetAt) ||
       Date.now() >= resetAt
     ) {
-
       resetAt =
-        Date.now() +
-        EIGHT_HOURS;
+        Date.now() + EIGHT_HOURS;
 
       remaining =
         MAX_REQUESTS;
-
     }
 
 
@@ -427,7 +391,6 @@
         "nexo_reset_at",
         String(resetAt)
       );
-
     }
 
 
@@ -442,7 +405,6 @@
         document.getElementById(
           "timer"
         );
-
 
       remainingElement.innerText =
         remaining.toLocaleString();
@@ -492,17 +454,9 @@
 
 
       if (remaining <= 0) {
-
-        circle.classList.add(
-          "disabled"
-        );
-
+        circle.classList.add("disabled");
       } else {
-
-        circle.classList.remove(
-          "disabled"
-        );
-
+        circle.classList.remove("disabled");
       }
 
 
@@ -516,9 +470,7 @@
           EIGHT_HOURS;
 
         saveLimit();
-
       }
-
     }
 
 
@@ -527,16 +479,14 @@
       1000
     );
 
-
     updateLimit();
-
 
     saveLimit();
 
 
-    /*
-     * TAP
-     */
+    /* =========================
+       TAP
+    ========================= */
 
     async function tapForPoint(event) {
 
@@ -550,9 +500,7 @@
         circle.dataset.loading ===
         "true"
       ) {
-
         return;
-
       }
 
 
@@ -563,7 +511,6 @@
         );
 
         return;
-
       }
 
 
@@ -573,9 +520,9 @@
 
       try {
 
-        /*
-         * TELEGRAM USER
-         */
+        /* =====================
+           TELEGRAM USER
+        ===================== */
 
         const telegramUser =
           tg &&
@@ -585,20 +532,36 @@
             : null;
 
 
-        if (!telegramUser?.id) {
+        if (!telegramUser) {
 
           alert(
-            "Telegram user not detected."
+            "Telegram user پیدا نشد.\n\n" +
+            "Mini App باید از داخل Telegram باز شود."
           );
 
           return;
-
         }
 
 
-        /*
-         * SEND REQUEST
-         */
+        if (!telegramUser.id) {
+
+          alert(
+            "Telegram User ID پیدا نشد."
+          );
+
+          return;
+        }
+
+
+        console.log(
+          "TELEGRAM USER:",
+          telegramUser
+        );
+
+
+        /* =====================
+           SEND TO SUPABASE
+        ===================== */
 
         const response =
           await fetch(
@@ -613,21 +576,54 @@
 
               body:
                 JSON.stringify({
+
                   action: "tap",
 
                   telegram_user:
                     telegramUser
+
                 })
             }
           );
 
 
-        /*
-         * READ RESPONSE
-         */
+        /* =====================
+           RESPONSE
+        ===================== */
 
-        const data =
-          await response.json();
+        const rawText =
+          await response.text();
+
+
+        console.log(
+          "HTTP STATUS:",
+          response.status
+        );
+
+        console.log(
+          "RAW RESPONSE:",
+          rawText
+        );
+
+
+        let data = {};
+
+        try {
+
+          data =
+            JSON.parse(
+              rawText
+            );
+
+        } catch {
+
+          data = {
+            success: false,
+            error: "INVALID_JSON",
+            message: rawText
+          };
+
+        }
 
 
         console.log(
@@ -636,9 +632,9 @@
         );
 
 
-        /*
-         * LIMIT REACHED
-         */
+        /* =====================
+           LIMIT
+        ===================== */
 
         if (
           response.status === 429 ||
@@ -668,15 +664,13 @@
             "سهمیه ۱۰۰۰ درخواست شما تمام شده است."
           );
 
-
           return;
-
         }
 
 
-        /*
-         * SERVER ERROR
-         */
+        /* =====================
+           SERVER ERROR
+        ===================== */
 
         if (
           !response.ok ||
@@ -684,21 +678,32 @@
         ) {
 
           alert(
-            "خطای سرور:\n" +
+            "خطای سرور\n\n" +
+
+            "HTTP: " +
+            response.status +
+
+            "\n\nError: " +
             (
               data.error ||
               "UNKNOWN_ERROR"
+            ) +
+
+            "\n\nMessage: " +
+            (
+              data.message ||
+              rawText ||
+              "No response"
             )
           );
 
           return;
-
         }
 
 
-        /*
-         * UPDATE POINTS
-         */
+        /* =====================
+           POINTS
+        ===================== */
 
         if (
           typeof data.points ===
@@ -707,13 +712,12 @@
 
           points =
             data.points;
-
         }
 
 
-        /*
-         * UPDATE REQUEST LIMIT
-         */
+        /* =====================
+           REMAINING
+        ===================== */
 
         if (
           typeof data.remaining ===
@@ -726,13 +730,12 @@
         } else {
 
           remaining--;
-
         }
 
 
-        /*
-         * UPDATE RESET TIME
-         */
+        /* =====================
+           RESET TIME
+        ===================== */
 
         if (data.resetAt) {
 
@@ -740,26 +743,24 @@
             new Date(
               data.resetAt
             ).getTime();
-
         }
 
 
-        /*
-         * SAVE
-         */
+        /* =====================
+           SAVE
+        ===================== */
 
         localStorage.setItem(
           "nexo_points",
           String(points)
         );
 
-
         saveLimit();
 
 
-        /*
-         * UPDATE SCREEN
-         */
+        /* =====================
+           SCREEN
+        ===================== */
 
         document.getElementById(
           "points"
@@ -770,9 +771,9 @@
         updateLimit();
 
 
-        /*
-         * +1 ANIMATION
-         */
+        /* =====================
+           +1
+        ===================== */
 
         const plus =
           document.createElement(
@@ -803,9 +804,7 @@
 
         setTimeout(
           function () {
-
             plus.remove();
-
           },
           800
         );
@@ -819,12 +818,8 @@
         );
 
 
-        /*
-         * SHOW REAL ERROR
-         */
-
         alert(
-          "خطا:\n" +
+          "خطا در اتصال\n\n" +
           (
             error?.message ||
             String(error)
@@ -836,9 +831,7 @@
 
         circle.dataset.loading =
           "false";
-
       }
-
     }
 
   </script>
