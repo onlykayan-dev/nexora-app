@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -93,6 +94,7 @@
 
       cursor: pointer;
       user-select: none;
+      touch-action: manipulation;
 
       transition: transform 0.08s;
     }
@@ -128,6 +130,7 @@
       background: #11111b;
       color: white;
       font-size: 12px;
+      cursor: pointer;
     }
 
     .menu button:active {
@@ -145,6 +148,7 @@
       border-radius: 12px;
       display: none;
       white-space: nowrap;
+      z-index: 999;
     }
   </style>
 </head>
@@ -156,7 +160,7 @@
     <div class="header">
       <div class="logo-title">NEXORA</div>
 
-      <button class="profile">
+      <button class="profile" type="button">
         👤
       </button>
     </div>
@@ -171,7 +175,11 @@
 
     <div class="tap-container">
 
-      <div class="tap-circle" onclick="tapEarn()">
+      <div
+        class="tap-circle"
+        id="tapButton"
+        onclick="tapEarn()"
+      >
 
         <div class="nexora-logo">
           NEXORA
@@ -187,15 +195,15 @@
 
     <div class="menu">
 
-      <button onclick="showMessage('Tasks coming soon')">
+      <button type="button" onclick="showMessage('Tasks coming soon')">
         📋 Tasks
       </button>
 
-      <button onclick="showMessage('Referral coming soon')">
+      <button type="button" onclick="showMessage('Referral coming soon')">
         👥 Referral
       </button>
 
-      <button onclick="showMessage('Ranking coming soon')">
+      <button type="button" onclick="showMessage('Ranking coming soon')">
         🏆 Ranking
       </button>
 
@@ -207,13 +215,39 @@
 
   <script>
 
-    // Telegram Mini App
+    // ==============================
+    // SUPABASE EDGE FUNCTION
+    // ==============================
+
+    const API_URL =
+      "https://zpejsrxapxozwpeyvfbw.supabase.co/functions/v1/super-action";
+
+
+    // ==============================
+    // TELEGRAM
+    // ==============================
+
+    let telegramUser = null;
+
     if (window.Telegram && window.Telegram.WebApp) {
+
       Telegram.WebApp.ready();
       Telegram.WebApp.expand();
+
+      if (
+        Telegram.WebApp.initDataUnsafe &&
+        Telegram.WebApp.initDataUnsafe.user
+      ) {
+        telegramUser =
+          Telegram.WebApp.initDataUnsafe.user;
+      }
     }
 
-    // Load saved points
+
+    // ==============================
+    // LOCAL POINTS
+    // ==============================
+
     let points = Number(
       localStorage.getItem("nexora_points") || 0
     );
@@ -221,46 +255,235 @@
     updatePoints();
 
 
-    // Tap to Earn
-    function tapEarn() {
+    // ==============================
+    // TAP LOCK
+    // ==============================
 
-      points += 1;
+    let tapping = false;
 
-      localStorage.setItem(
-        "nexora_points",
-        points
-      );
 
-      updatePoints();
+    // ==============================
+    // TAP TO EARN
+    // ==============================
 
+    async function tapEarn() {
+
+      // Prevent accidental double request
+      if (tapping) {
+        return;
+      }
+
+      if (!telegramUser) {
+
+        showMessage(
+          "Open NEXORA inside Telegram."
+        );
+
+        return;
+      }
+
+      tapping = true;
+
+      try {
+
+        const response = await fetch(
+          API_URL,
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+
+              action: "tap",
+
+              telegram_user: telegramUser
+
+            })
+          }
+        );
+
+
+        let data;
+
+        try {
+
+          data = await response.json();
+
+        } catch (error) {
+
+          throw new Error(
+            "Invalid server response"
+          );
+        }
+
+
+        // Server error
+        if (!response.ok) {
+
+          throw new Error(
+            data.error ||
+            "Server error: " + response.status
+          );
+        }
+
+
+        // Application error
+        if (!data.success) {
+
+          throw new Error(
+            data.error ||
+            "Tap failed"
+          );
+        }
+
+
+        // ==========================
+        // ADD SERVER CONFIRMED POINT
+        // ==========================
+
+        const added =
+          Number(data.added || 0);
+
+        if (added > 0) {
+
+          points += added;
+
+          localStorage.setItem(
+            "nexora_points",
+            String(points)
+          );
+
+          updatePoints();
+
+          showPlusOne();
+
+        }
+
+
+        // ==========================
+        // LIMIT MESSAGE
+        // ==========================
+
+        if (
+          typeof data.remaining === "number" &&
+          data.remaining <= 0
+        ) {
+
+          showMessage(
+            "1000 taps reached. Reset in 8 hours."
+          );
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "NEXORA TAP ERROR:",
+          error
+        );
+
+        showMessage(
+          error.message ||
+          "Connection error"
+        );
+
+      } finally {
+
+        tapping = false;
+
+      }
     }
 
 
-    // Update points on screen
+    // ==============================
+    // UPDATE POINTS
+    // ==============================
+
     function updatePoints() {
 
-      document.getElementById("points").innerText =
+      document.getElementById(
+        "points"
+      ).innerText =
         points.toLocaleString();
 
     }
 
 
-    // Message
+    // ==============================
+    // +1 ANIMATION
+    // ==============================
+
+    function showPlusOne() {
+
+      const effect =
+        document.createElement("div");
+
+      effect.innerText = "+1";
+
+      effect.style.position = "fixed";
+      effect.style.left = "50%";
+      effect.style.top = "45%";
+      effect.style.transform =
+        "translate(-50%, -50%)";
+      effect.style.fontSize = "28px";
+      effect.style.fontWeight = "900";
+      effect.style.color = "#7467ff";
+      effect.style.pointerEvents = "none";
+      effect.style.zIndex = "9999";
+      effect.style.transition =
+        "all 0.6s ease";
+
+      document.body.appendChild(effect);
+
+      requestAnimationFrame(() => {
+
+        effect.style.top = "35%";
+        effect.style.opacity = "0";
+
+      });
+
+      setTimeout(() => {
+
+        effect.remove();
+
+      }, 650);
+    }
+
+
+    // ==============================
+    // MESSAGE
+    // ==============================
+
     function showMessage(text) {
 
       const message =
-        document.getElementById("message");
+        document.getElementById(
+          "message"
+        );
 
       message.innerText = text;
-      message.style.display = "block";
 
-      setTimeout(() => {
-        message.style.display = "none";
-      }, 1800);
+      message.style.display =
+        "block";
 
+      clearTimeout(
+        window.nexoraMessageTimer
+      );
+
+      window.nexoraMessageTimer =
+        setTimeout(() => {
+
+          message.style.display =
+            "none";
+
+        }, 1800);
     }
 
   </script>
 
 </body>
 </html>
+```
