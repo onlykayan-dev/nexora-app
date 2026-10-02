@@ -72,6 +72,12 @@
       letter-spacing: 2px;
     }
 
+    .limit-info {
+      margin-top: 10px;
+      color: #8b8b9d;
+      font-size: 12px;
+    }
+
     .tap-container {
       margin-top: 55px;
       display: flex;
@@ -171,6 +177,14 @@
       <div class="points-label">
         NEXO POINTS
       </div>
+
+      <div class="limit-info" id="limitInfo">
+        1000 points / 8 hours
+      </div>
+
+      <div class="limit-info" id="timer">
+        Remaining: 1000
+      </div>
     </div>
 
     <div class="tap-container">
@@ -256,6 +270,14 @@
 
 
     // ==============================
+    // TAP LIMIT
+    // ==============================
+
+    let remaining = 1000;
+    let remainingSeconds = 0;
+
+
+    // ==============================
     // TAP LOCK
     // ==============================
 
@@ -268,7 +290,6 @@
 
     async function tapEarn() {
 
-      // Prevent accidental double request
       if (tapping) {
         return;
       }
@@ -320,7 +341,6 @@
         }
 
 
-        // Server error
         if (!response.ok) {
 
           throw new Error(
@@ -330,13 +350,38 @@
         }
 
 
-        // Application error
         if (!data.success) {
 
           throw new Error(
             data.error ||
             "Tap failed"
           );
+        }
+
+
+        // ==========================
+        // SERVER LIMIT
+        // ==========================
+
+        if (
+          typeof data.remaining === "number"
+        ) {
+
+          remaining =
+            data.remaining;
+
+          updateLimit();
+
+        }
+
+
+        if (
+          typeof data.remainingSeconds === "number"
+        ) {
+
+          remainingSeconds =
+            data.remainingSeconds;
+
         }
 
 
@@ -373,7 +418,7 @@
         ) {
 
           showMessage(
-            "1000 taps reached. Reset in 8 hours."
+            "1000 points reached. Reset in 8 hours."
           );
 
         }
@@ -410,6 +455,60 @@
         points.toLocaleString();
 
     }
+
+
+    // ==============================
+    // UPDATE LIMIT
+    // ==============================
+
+    function updateLimit() {
+
+      document.getElementById(
+        "timer"
+      ).innerText =
+        "Remaining: " +
+        remaining.toLocaleString();
+    }
+
+
+    // ==============================
+    // 8 HOUR COUNTDOWN
+    // ==============================
+
+    setInterval(() => {
+
+      if (remainingSeconds > 0) {
+
+        remainingSeconds--;
+
+        const hours =
+          Math.floor(
+            remainingSeconds / 3600
+          );
+
+        const minutes =
+          Math.floor(
+            (remainingSeconds % 3600) / 60
+          );
+
+        const seconds =
+          remainingSeconds % 60;
+
+        document.getElementById(
+          "timer"
+        ).innerText =
+          "Remaining: " +
+          remaining.toLocaleString() +
+          " • " +
+          String(hours).padStart(2, "0") +
+          ":" +
+          String(minutes).padStart(2, "0") +
+          ":" +
+          String(seconds).padStart(2, "0");
+
+      }
+
+    }, 1000);
 
 
     // ==============================
