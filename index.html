@@ -101,13 +101,10 @@
       font-size: 13px;
     }
 
-    /* TAP CIRCLE */
-
     .tap-circle {
       width: 220px;
       height: 220px;
       margin: 0 auto;
-
       border-radius: 50%;
 
       background:
@@ -119,7 +116,6 @@
         );
 
       padding: 7px;
-
       cursor: pointer;
 
       box-shadow:
@@ -128,7 +124,6 @@
 
       transition: transform .08s ease;
 
-      /* حذف مربع/هایلایت آبی */
       -webkit-tap-highlight-color: transparent;
       outline: none;
       border: none;
@@ -154,7 +149,6 @@
     .tap-inner {
       width: 100%;
       height: 100%;
-
       border-radius: 50%;
 
       background:
@@ -191,15 +185,12 @@
       font-size: 11px;
     }
 
-    /* +1 ANIMATION */
-
     .plus-one {
       position: fixed;
       pointer-events: none;
 
       font-size: 28px;
       font-weight: 900;
-
       color: #00e5ff;
 
       animation:
@@ -238,8 +229,6 @@
 
   <div class="app">
 
-    <!-- LOGO -->
-
     <div class="logo">
       N
     </div>
@@ -253,8 +242,6 @@
     </div>
 
 
-    <!-- POINTS -->
-
     <div class="points-box">
 
       <div class="points-label">
@@ -267,8 +254,6 @@
 
     </div>
 
-
-    <!-- LIMIT -->
 
     <div class="limit-info">
 
@@ -294,8 +279,6 @@
 
     </div>
 
-
-    <!-- TAP -->
 
     <div
       id="tapCircle"
@@ -331,21 +314,33 @@
 
   <script>
 
-    /* TELEGRAM */
+    /* =========================
+       TELEGRAM
+    ========================= */
 
-    if (
+    const tg =
       window.Telegram &&
       window.Telegram.WebApp
-    ) {
+        ? window.Telegram.WebApp
+        : null;
 
-      window.Telegram.WebApp.ready();
-
-      window.Telegram.WebApp.expand();
-
+    if (tg) {
+      tg.ready();
+      tg.expand();
     }
 
 
-    /* POINTS */
+    /* =========================
+       SUPABASE
+    ========================= */
+
+    const API_URL =
+      "https://zpejsrxapxozwpeyvfbw.supabase.co/functions/v1/super-action";
+
+
+    /* =========================
+       POINTS
+    ========================= */
 
     let points =
       Number(
@@ -356,7 +351,9 @@
       points.toLocaleString();
 
 
-    /* LIMIT */
+    /* =========================
+       LIMIT DISPLAY
+    ========================= */
 
     const MAX_REQUESTS = 1000;
 
@@ -380,20 +377,14 @@
       );
 
 
-    /* CHECK LIMIT */
-
     if (
       !remaining ||
       remaining < 0 ||
       remaining > MAX_REQUESTS
     ) {
-
       remaining = MAX_REQUESTS;
-
     }
 
-
-    /* START NEW 8 HOUR WINDOW */
 
     if (
       !resetAt ||
@@ -405,11 +396,8 @@
 
       remaining =
         MAX_REQUESTS;
-
     }
 
-
-    /* SAVE */
 
     function saveLimit() {
 
@@ -422,11 +410,12 @@
         "nexo_reset_at",
         resetAt
       );
-
     }
 
 
-    /* UPDATE SCREEN */
+    /* =========================
+       UPDATE LIMIT DISPLAY
+    ========================= */
 
     function updateLimit() {
 
@@ -436,32 +425,32 @@
         remaining.toLocaleString();
 
 
-      let timeLeft =
+      const timeLeft =
         Math.max(
           0,
           resetAt - Date.now()
         );
 
 
-      let totalSeconds =
+      const totalSeconds =
         Math.ceil(
           timeLeft / 1000
         );
 
 
-      let hours =
+      const hours =
         Math.floor(
           totalSeconds / 3600
         );
 
 
-      let minutes =
+      const minutes =
         Math.floor(
           (totalSeconds % 3600) / 60
         );
 
 
-      let seconds =
+      const seconds =
         totalSeconds % 60;
 
 
@@ -499,8 +488,6 @@
       }
 
 
-      /* RESET */
-
       if (timeLeft <= 0) {
 
         remaining =
@@ -516,14 +503,8 @@
     }
 
 
-    /* TIMER */
-
     setInterval(
-      function () {
-
-        updateLimit();
-
-      },
+      updateLimit,
       1000
     );
 
@@ -533,91 +514,240 @@
     saveLimit();
 
 
-    /* TAP */
+    /* =========================
+       TAP
+    ========================= */
 
-    function tapForPoint(event) {
+    async function tapForPoint(event) {
 
       if (remaining <= 0) {
-
         return;
-
       }
 
 
-      /* REMOVE FOCUS */
+      const circle =
+        document.getElementById(
+          "tapCircle"
+        );
+
+
+      /*
+        جلوگیری از چند درخواست
+        همزمان با کلیک سریع
+      */
 
       if (
-        document.activeElement
+        circle.dataset.loading === "true"
       ) {
-
-        document.activeElement.blur();
-
+        return;
       }
 
 
-      /* REMOVE ONE REQUEST */
-
-      remaining--;
+      circle.dataset.loading = "true";
 
 
-      /* ADD POINT */
+      try {
 
-      points++;
+        /* TELEGRAM USER */
 
-
-      localStorage.setItem(
-        "nexo_points",
-        points
-      );
-
-
-      saveLimit();
+        const telegramUser =
+          tg &&
+          tg.initDataUnsafe &&
+          tg.initDataUnsafe.user
+            ? tg.initDataUnsafe.user
+            : null;
 
 
-      document.getElementById(
-        "points"
-      ).innerText =
-        points.toLocaleString();
+        if (!telegramUser?.id) {
+
+          alert(
+            "Telegram user not detected."
+          );
+
+          return;
+        }
 
 
-      updateLimit();
+        /* SERVER REQUEST */
+
+        const response =
+          await fetch(
+            API_URL,
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json"
+              },
+
+              body: JSON.stringify({
+
+                telegram_user:
+                  telegramUser
+
+              })
+
+            }
+          );
 
 
-      /* +1 ANIMATION */
-
-      const plus =
-        document.createElement("div");
+        const data =
+          await response.json();
 
 
-      plus.className =
-        "plus-one";
+        /* LIMIT REACHED */
+
+        if (
+          response.status === 429 ||
+          data.error === "LIMIT_REACHED"
+        ) {
+
+          remaining = 0;
 
 
-      plus.innerText =
-        "+1";
+          if (data.resetAt) {
+
+            resetAt =
+              new Date(
+                data.resetAt
+              ).getTime();
+
+          }
 
 
-      plus.style.left =
-        event.clientX + "px";
+          saveLimit();
+
+          updateLimit();
+
+          alert(
+            "سهمیه ۱۰۰۰ درخواست شما تمام شده است."
+          );
+
+          return;
+        }
 
 
-      plus.style.top =
-        event.clientY + "px";
+        /* SERVER ERROR */
+
+        if (
+          !response.ok ||
+          !data.success
+        ) {
+
+          alert(
+            "خطا در اتصال به سرور."
+          );
+
+          return;
+        }
 
 
-      document.body.appendChild(
-        plus
-      );
+        /* =====================
+           SERVER ACCEPTED TAP
+        ===================== */
 
 
-      setTimeout(
-        function () {
+        if (
+          typeof data.remaining === "number"
+        ) {
 
-          plus.remove();
+          remaining =
+            data.remaining;
 
-        },
-        800
-      );
+        } else {
+
+          remaining--;
+
+        }
+
+
+        if (data.resetAt) {
+
+          resetAt =
+            new Date(
+              data.resetAt
+            ).getTime();
+
+        }
+
+
+        /* ADD POINT */
+
+        points++;
+
+
+        localStorage.setItem(
+          "nexo_points",
+          points
+        );
+
+
+        saveLimit();
+
+
+        document.getElementById(
+          "points"
+        ).innerText =
+          points.toLocaleString();
+
+
+        updateLimit();
+
+
+        /* +1 ANIMATION */
+
+        const plus =
+          document.createElement(
+            "div"
+          );
+
+
+        plus.className =
+          "plus-one";
+
+
+        plus.innerText =
+          "+1";
+
+
+        plus.style.left =
+          event.clientX + "px";
+
+
+        plus.style.top =
+          event.clientY + "px";
+
+
+        document.body.appendChild(
+          plus
+        );
+
+
+        setTimeout(
+          function () {
+
+            plus.remove();
+
+          },
+          800
+        );
+
+
+      } catch (error) {
+
+        console.error(error);
+
+        alert(
+          "خطا در اتصال به سرور."
+        );
+
+      } finally {
+
+        circle.dataset.loading =
+          "false";
+
+      }
 
     }
 
