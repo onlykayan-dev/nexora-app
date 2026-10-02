@@ -109,6 +109,79 @@
       transform: scale(0.98);
     }
 
+    /* LIMIT CIRCLE */
+
+    .limit-section {
+      text-align: center;
+      margin: 18px 0;
+    }
+
+    .limit-circle {
+      width: 112px;
+      height: 112px;
+      margin: 0 auto;
+      border-radius: 50%;
+      background: conic-gradient(
+        #00d9ff 100%,
+        #202742 0%
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow:
+        0 0 25px rgba(0, 217, 255, 0.25),
+        0 0 50px rgba(115, 92, 255, 0.12);
+    }
+
+    .circle-inner {
+      width: 94px;
+      height: 94px;
+      border-radius: 50%;
+      background: #0b1022;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #remainingCount {
+      font-size: 23px;
+      font-weight: 900;
+    }
+
+    .circle-label {
+      color: #7f89a8;
+      font-size: 9px;
+      margin-top: 4px;
+    }
+
+    .limit-box {
+      display: none;
+      margin-top: 12px;
+      padding: 17px;
+      border-radius: 18px;
+      background: #11162b;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .limit-title {
+      color: #9da7c7;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    #limitText {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    #limitTimer {
+      margin-top: 7px;
+      color: #00d9ff;
+      font-size: 14px;
+    }
+
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -184,7 +257,6 @@
       </div>
     </div>
 
-
     <div class="card">
 
       <div class="points-label">
@@ -207,31 +279,77 @@
 
     </div>
 
+    <!-- 8 HOUR LIMIT -->
+
+    <div class="limit-section">
+
+      <div class="limit-circle" onclick="toggleLimit()">
+
+        <div class="circle-inner">
+
+          <div id="remainingCount">
+            1000
+          </div>
+
+          <div class="circle-label">
+            REQUESTS LEFT
+          </div>
+
+        </div>
+
+      </div>
+
+      <div id="limitBox" class="limit-box">
+
+        <div class="limit-title">
+          ⚡ REQUEST LIMIT
+        </div>
+
+        <div id="limitText">
+          1000 / 1000
+        </div>
+
+        <div id="limitTimer">
+          ⏳ 08:00:00
+        </div>
+
+      </div>
+
+    </div>
 
     <div class="grid">
 
-      <div class="menu" onclick="showMessage('🎯 Tasks will be available soon!')">
+      <div
+        class="menu"
+        onclick="showMessage('🎯 Tasks will be available soon!')"
+      >
         <div class="menu-icon">🎯</div>
         <div class="menu-title">Tasks</div>
         <div class="menu-desc">Earn points</div>
       </div>
 
-
-      <div class="menu" onclick="inviteFriend()">
+      <div
+        class="menu"
+        onclick="inviteFriend()"
+      >
         <div class="menu-icon">👥</div>
         <div class="menu-title">Invite</div>
         <div class="menu-desc">Invite friends</div>
       </div>
 
-
-      <div class="menu" onclick="showMessage('🏆 Leaderboard is coming soon!')">
+      <div
+        class="menu"
+        onclick="showMessage('🏆 Leaderboard is coming soon!')"
+      >
         <div class="menu-icon">🏆</div>
         <div class="menu-title">Ranking</div>
         <div class="menu-desc">Top players</div>
       </div>
 
-
-      <div class="menu" onclick="showMessage('👛 Wallet will be available later.')">
+      <div
+        class="menu"
+        onclick="showMessage('👛 Wallet will be available later.')"
+      >
         <div class="menu-icon">👛</div>
         <div class="menu-title">Wallet</div>
         <div class="menu-desc">Connect wallet</div>
@@ -239,27 +357,35 @@
 
     </div>
 
-
     <div class="footer">
       NEXORA © 2026
     </div>
 
   </div>
 
-
   <div id="message"></div>
 
-
   <script>
+
+    /* =========================
+       TELEGRAM
+    ========================= */
+
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.ready();
+      window.Telegram.WebApp.expand();
+    }
+
+
+    /* =========================
+       LOCAL DISPLAY
+    ========================= */
 
     let points =
       Number(localStorage.getItem("nexo_points")) || 0;
 
     let streak =
       Number(localStorage.getItem("nexo_streak")) || 1;
-
-    let lastClaim =
-      localStorage.getItem("nexo_last_claim");
 
 
     document.getElementById("points").innerText =
@@ -269,44 +395,274 @@
       streak;
 
 
-    function claimDaily() {
+    /* =========================
+       RATE LIMIT
+    ========================= */
 
-      const today =
-        new Date().toDateString();
+    let limitRemaining = 1000;
 
-      if (lastClaim === today) {
+    let limitSeconds = 8 * 60 * 60;
 
-        showMessage(
-          "⏳ You already claimed today's reward!"
-        );
-
-        return;
-      }
+    let limitOpen = false;
 
 
-      points += 100;
+    function toggleLimit() {
 
+      const box =
+        document.getElementById("limitBox");
 
-      localStorage.setItem(
-        "nexo_points",
-        points
-      );
+      limitOpen = !limitOpen;
 
-      localStorage.setItem(
-        "nexo_last_claim",
-        today
-      );
-
-
-      document.getElementById("points").innerText =
-        points.toLocaleString();
-
-
-      showMessage(
-        "🎉 +100 NEXO Points!"
-      );
+      box.style.display =
+        limitOpen ? "block" : "none";
     }
 
+
+    function updateLimitUI() {
+
+      document.getElementById(
+        "remainingCount"
+      ).innerText =
+        limitRemaining.toLocaleString();
+
+
+      document.getElementById(
+        "limitText"
+      ).innerText =
+        `${limitRemaining.toLocaleString()} / 1000`;
+
+
+      const hours =
+        Math.floor(limitSeconds / 3600);
+
+      const minutes =
+        Math.floor(
+          (limitSeconds % 3600) / 60
+        );
+
+      const seconds =
+        limitSeconds % 60;
+
+
+      document.getElementById(
+        "limitTimer"
+      ).innerText =
+        `⏳ ${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    }
+
+
+    function startLimitTimer() {
+
+      setInterval(function() {
+
+        if (limitSeconds > 0) {
+
+          limitSeconds--;
+
+        } else {
+
+          limitRemaining = 1000;
+
+          limitSeconds =
+            8 * 60 * 60;
+        }
+
+        updateLimitUI();
+
+      }, 1000);
+    }
+
+
+    updateLimitUI();
+
+    startLimitTimer();
+
+
+    /* =========================
+       DAILY CLAIM
+    ========================= */
+
+    async function claimDaily() {
+
+      try {
+
+        const tgUser =
+          window.Telegram?.WebApp?.initDataUnsafe?.user;
+
+
+        if (!tgUser?.id) {
+
+          showMessage(
+            "لطفاً از داخل تلگرام وارد شوید"
+          );
+
+          return;
+        }
+
+
+        showMessage(
+          "⏳ در حال بررسی..."
+        );
+
+
+        const response =
+          await fetch(
+            "https://zpejsrxapxozwpeyvfbw.supabase.co/functions/v1/super-action",
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type": "application/json"
+              },
+
+              body: JSON.stringify({
+                telegram_user: tgUser
+              })
+            }
+          );
+
+
+        const data =
+          await response.json();
+
+
+        console.log(
+          "SUPER ACTION:",
+          data
+        );
+
+
+        /* LIMIT REACHED */
+
+        if (
+          response.status === 429 ||
+          data.error === "LIMIT_REACHED"
+        ) {
+
+          limitRemaining = 0;
+
+          if (data.remainingSeconds) {
+
+            limitSeconds =
+              Number(
+                data.remainingSeconds
+              );
+
+          }
+
+          updateLimitUI();
+
+          showMessage(
+            "⛔ سهمیه ۸ ساعته تمام شده است"
+          );
+
+          return;
+        }
+
+
+        if (!data.success) {
+
+          showMessage(
+            data.message ||
+            "خطا در دریافت پاداش"
+          );
+
+          return;
+        }
+
+
+        /* UPDATE LIMIT */
+
+        if (
+          typeof data.remaining ===
+          "number"
+        ) {
+
+          limitRemaining =
+            data.remaining;
+        }
+
+
+        if (
+          typeof data.remainingSeconds ===
+          "number"
+        ) {
+
+          limitSeconds =
+            data.remainingSeconds;
+        }
+
+
+        updateLimitUI();
+
+
+        /* ALREADY CLAIMED */
+
+        if (data.already_claimed) {
+
+          showMessage(
+            "🎁 پاداش امروز را قبلاً گرفتی"
+          );
+
+          return;
+        }
+
+
+        /* WEEK COMPLETE */
+
+        if (data.weekly_complete) {
+
+          showMessage(
+            "🎉 پاداش هفتگی تمام شده است"
+          );
+
+          return;
+        }
+
+
+        /* SUCCESS */
+
+        if (
+          typeof data.reward ===
+          "number"
+        ) {
+
+          points =
+            Number(data.points) ||
+            points + data.reward;
+
+
+          document.getElementById(
+            "points"
+          ).innerText =
+            points.toLocaleString();
+
+
+          showMessage(
+            `🎉 روز ${data.day}: +${data.reward} امتیاز`
+          );
+
+        } else {
+
+          showMessage(
+            "🎉 درخواست با موفقیت انجام شد"
+          );
+        }
+
+      } catch (error) {
+
+        console.error(error);
+
+        showMessage(
+          "خطا در اتصال به سرور"
+        );
+      }
+    }
+
+
+    /* =========================
+       INVITE
+    ========================= */
 
     function inviteFriend() {
 
@@ -337,7 +693,9 @@
 
         window.Telegram.WebApp.openTelegramLink(
           "https://t.me/share/url?url=" +
-          encodeURIComponent(referralLink) +
+          encodeURIComponent(
+            referralLink
+          ) +
           "&text=" +
           encodeURIComponent(
             "🚀 Join me on NEXORA and earn points!"
@@ -357,12 +715,21 @@
     }
 
 
+    /* =========================
+       MESSAGE
+    ========================= */
+
     function showMessage(text) {
 
       const message =
-        document.getElementById("message");
+        document.getElementById(
+          "message"
+        );
 
-      message.innerText = text;
+
+      message.innerText =
+        text;
+
 
       message.style.display =
         "block";
@@ -376,66 +743,6 @@
       }, 2500);
     }
 
-
-    if (
-      window.Telegram &&
-      window.Telegram.WebApp
-    ) {
-
-      window.Telegram.WebApp.ready();
-
-      window.Telegram.WebApp.expand();
-    }
-async function claimDaily() {
-  try {
-    const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
-    
-console.log("Telegram user:", tgUser);
-console.log("Telegram initData:", window.Telegram?.WebApp?.initData);
-    if (!tgUser?.id) {
-      showMessage("لطفاً از داخل تلگرام وارد شوید");
-      return;
-    }
-console.log("CLAIM DAILY START");
-    const response = await fetch(
-      "https://zpejsrxapxozwpeyvfbw.supabase.co/functions/v1/super-action",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          telegram_user: tgUser
-        })
-      }
-    );
-
-    const data = await response.json();
-
-    if (!data.success) {
-      showMessage("خطا در دریافت پاداش");
-      return;
-    }
-
-    if (data.already_claimed) {
-      showMessage("🎁 پاداش امروز را قبلاً گرفتی");
-      return;
-    }
-
-    if (data.weekly_complete) {
-      showMessage("🎉 پاداش هفتگی تمام شده است");
-      return;
-    }
-
-    showMessage(
-      `🎉 روز ${data.day}: +${data.reward} امتیاز`
-    );
-
-  } catch (error) {
-    console.error(error);
-    showMessage("خطا در اتصال به سرور");
-  }
-}
   </script>
 
 </body>
