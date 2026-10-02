@@ -20,12 +20,7 @@
     body {
       min-height: 100vh;
       background:
-        radial-gradient(
-          circle at top,
-          #172b65 0%,
-          #080b18 45%,
-          #05060d 100%
-        );
+        radial-gradient(circle at top, #172b65 0%, #080b18 45%, #05060d 100%);
       color: white;
       display: flex;
       justify-content: center;
@@ -48,15 +43,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background:
-        linear-gradient(
-          135deg,
-          #00d9ff,
-          #735cff,
-          #d946ef
-        );
-      box-shadow:
-        0 0 35px rgba(0, 210, 255, .35);
+      background: linear-gradient(135deg, #00d9ff, #735cff, #d946ef);
+      box-shadow: 0 0 35px rgba(0, 210, 255, .35);
       font-size: 48px;
       font-weight: 900;
       user-select: none;
@@ -89,12 +77,7 @@
     #points {
       font-size: 38px;
       font-weight: 900;
-      background:
-        linear-gradient(
-          90deg,
-          #00e5ff,
-          #a855f7
-        );
+      background: linear-gradient(90deg, #00e5ff, #a855f7);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -144,13 +127,17 @@
       -webkit-tap-highlight-color: transparent;
       outline: none;
       border: none;
-
       user-select: none;
       -webkit-user-select: none;
     }
 
     .tap-circle:active {
       transform: scale(.94);
+    }
+
+    .tap-circle:focus,
+    .tap-circle:focus-visible {
+      outline: none;
     }
 
     .tap-circle.disabled {
@@ -201,22 +188,31 @@
     .plus-one {
       position: fixed;
       pointer-events: none;
+
       font-size: 28px;
       font-weight: 900;
       color: #00e5ff;
-      animation: plusOne .8s ease-out forwards;
+
+      animation:
+        plusOne .8s ease-out forwards;
+
       z-index: 999;
     }
 
     @keyframes plusOne {
+
       0% {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform:
+          translateY(0)
+          scale(1);
       }
 
       100% {
         opacity: 0;
-        transform: translateY(-100px) scale(1.4);
+        transform:
+          translateY(-100px)
+          scale(1.4);
       }
     }
 
@@ -225,6 +221,7 @@
       color: #626b88;
       font-size: 10px;
     }
+
   </style>
 </head>
 
@@ -232,13 +229,18 @@
 
   <div class="app">
 
-    <div class="logo">N</div>
+    <div class="logo">
+      N
+    </div>
 
-    <div class="title">NEXORA</div>
+    <div class="title">
+      NEXORA
+    </div>
 
     <div class="subtitle">
       EARN • TAP • RISE
     </div>
+
 
     <div class="points-box">
 
@@ -252,19 +254,31 @@
 
     </div>
 
+
     <div class="limit-info">
 
       <div class="limit-count">
-        <span id="remaining">1000</span>
+
+        <span id="remaining">
+          1000
+        </span>
+
         / 1000 REQUESTS
+
       </div>
 
       <div class="timer">
+
         ⏳ Reset in
-        <span id="timer">08:00:00</span>
+
+        <span id="timer">
+          08:00:00
+        </span>
+
       </div>
 
     </div>
+
 
     <div
       id="tapCircle"
@@ -290,11 +304,13 @@
 
     </div>
 
+
     <div class="footer">
       NEXORA © 2026
     </div>
 
   </div>
+
 
   <script>
 
@@ -315,7 +331,7 @@
 
 
     /* =========================
-       API
+       SUPABASE
     ========================= */
 
     const API_URL =
@@ -336,7 +352,7 @@
 
 
     /* =========================
-       LIMIT
+       LIMIT DISPLAY
     ========================= */
 
     const MAX_REQUESTS = 1000;
@@ -344,12 +360,14 @@
     const EIGHT_HOURS =
       8 * 60 * 60 * 1000;
 
+
     let remaining =
       Number(
         localStorage.getItem(
           "nexo_remaining"
         )
       );
+
 
     let resetAt =
       Number(
@@ -360,7 +378,7 @@
 
 
     if (
-      !Number.isFinite(remaining) ||
+      !remaining ||
       remaining < 0 ||
       remaining > MAX_REQUESTS
     ) {
@@ -369,9 +387,10 @@
 
 
     if (
-      !Number.isFinite(resetAt) ||
+      !resetAt ||
       Date.now() >= resetAt
     ) {
+
       resetAt =
         Date.now() + EIGHT_HOURS;
 
@@ -384,33 +403,29 @@
 
       localStorage.setItem(
         "nexo_remaining",
-        String(remaining)
+        remaining
       );
 
       localStorage.setItem(
         "nexo_reset_at",
-        String(resetAt)
+        resetAt
       );
     }
 
 
+    /* =========================
+       UPDATE LIMIT DISPLAY
+    ========================= */
+
     function updateLimit() {
 
-      const remainingElement =
-        document.getElementById(
-          "remaining"
-        );
-
-      const timerElement =
-        document.getElementById(
-          "timer"
-        );
-
-      remainingElement.innerText =
+      document.getElementById(
+        "remaining"
+      ).innerText =
         remaining.toLocaleString();
 
 
-      let timeLeft =
+      const timeLeft =
         Math.max(
           0,
           resetAt - Date.now()
@@ -439,11 +454,16 @@
         totalSeconds % 60;
 
 
-      timerElement.innerText =
-        String(hours).padStart(2, "0") +
-        ":" +
-        String(minutes).padStart(2, "0") +
-        ":" +
+      document.getElementById(
+        "timer"
+      ).innerText =
+
+        String(hours).padStart(2, "0")
+        + ":"
+        +
+        String(minutes).padStart(2, "0")
+        + ":"
+        +
         String(seconds).padStart(2, "0");
 
 
@@ -454,9 +474,17 @@
 
 
       if (remaining <= 0) {
-        circle.classList.add("disabled");
+
+        circle.classList.add(
+          "disabled"
+        );
+
       } else {
-        circle.classList.remove("disabled");
+
+        circle.classList.remove(
+          "disabled"
+        );
+
       }
 
 
@@ -466,11 +494,12 @@
           MAX_REQUESTS;
 
         resetAt =
-          Date.now() +
-          EIGHT_HOURS;
+          Date.now() + EIGHT_HOURS;
 
         saveLimit();
+
       }
+
     }
 
 
@@ -478,6 +507,7 @@
       updateLimit,
       1000
     );
+
 
     updateLimit();
 
@@ -490,39 +520,35 @@
 
     async function tapForPoint(event) {
 
+      if (remaining <= 0) {
+        return;
+      }
+
+
       const circle =
         document.getElementById(
           "tapCircle"
         );
 
 
+      /*
+        جلوگیری از چند درخواست
+        همزمان با کلیک سریع
+      */
+
       if (
-        circle.dataset.loading ===
-        "true"
+        circle.dataset.loading === "true"
       ) {
         return;
       }
 
 
-      if (remaining <= 0) {
-
-        alert(
-          "سهمیه ۱۰۰۰ درخواست شما تمام شده است."
-        );
-
-        return;
-      }
-
-
-      circle.dataset.loading =
-        "true";
+      circle.dataset.loading = "true";
 
 
       try {
 
-        /* =====================
-           TELEGRAM USER
-        ===================== */
+        /* TELEGRAM USER */
 
         const telegramUser =
           tg &&
@@ -532,36 +558,17 @@
             : null;
 
 
-        if (!telegramUser) {
+        if (!telegramUser?.id) {
 
           alert(
-            "Telegram user پیدا نشد.\n\n" +
-            "Mini App باید از داخل Telegram باز شود."
+            "Telegram user not detected."
           );
 
           return;
         }
 
 
-        if (!telegramUser.id) {
-
-          alert(
-            "Telegram User ID پیدا نشد."
-          );
-
-          return;
-        }
-
-
-        console.log(
-          "TELEGRAM USER:",
-          telegramUser
-        );
-
-
-        /* =====================
-           SEND TO SUPABASE
-        ===================== */
+        /* SERVER REQUEST */
 
         const response =
           await fetch(
@@ -574,72 +581,26 @@
                   "application/json"
               },
 
-              body:
-                JSON.stringify({
+              body: JSON.stringify({
 
-                  action: "tap",
+                telegram_user:
+                  telegramUser
 
-                  telegram_user:
-                    telegramUser
+              })
 
-                })
             }
           );
 
 
-        /* =====================
-           RESPONSE
-        ===================== */
-
-        const rawText =
-          await response.text();
+        const data =
+          await response.json();
 
 
-        console.log(
-          "HTTP STATUS:",
-          response.status
-        );
-
-        console.log(
-          "RAW RESPONSE:",
-          rawText
-        );
-
-
-        let data = {};
-
-        try {
-
-          data =
-            JSON.parse(
-              rawText
-            );
-
-        } catch {
-
-          data = {
-            success: false,
-            error: "INVALID_JSON",
-            message: rawText
-          };
-
-        }
-
-
-        console.log(
-          "NEXORA RESPONSE:",
-          data
-        );
-
-
-        /* =====================
-           LIMIT
-        ===================== */
+        /* LIMIT REACHED */
 
         if (
           response.status === 429 ||
-          data.error ===
-            "LIMIT_REACHED"
+          data.error === "LIMIT_REACHED"
         ) {
 
           remaining = 0;
@@ -659,7 +620,6 @@
 
           updateLimit();
 
-
           alert(
             "سهمیه ۱۰۰۰ درخواست شما تمام شده است."
           );
@@ -668,9 +628,7 @@
         }
 
 
-        /* =====================
-           SERVER ERROR
-        ===================== */
+        /* SERVER ERROR */
 
         if (
           !response.ok ||
@@ -678,23 +636,7 @@
         ) {
 
           alert(
-            "خطای سرور\n\n" +
-
-            "HTTP: " +
-            response.status +
-
-            "\n\nError: " +
-            (
-              data.error ||
-              "UNKNOWN_ERROR"
-            ) +
-
-            "\n\nMessage: " +
-            (
-              data.message ||
-              rawText ||
-              "No response"
-            )
+            "خطا در اتصال به سرور."
           );
 
           return;
@@ -702,26 +644,12 @@
 
 
         /* =====================
-           POINTS
+           SERVER ACCEPTED TAP
         ===================== */
 
-        if (
-          typeof data.points ===
-          "number"
-        ) {
-
-          points =
-            data.points;
-        }
-
-
-        /* =====================
-           REMAINING
-        ===================== */
 
         if (
-          typeof data.remaining ===
-          "number"
+          typeof data.remaining === "number"
         ) {
 
           remaining =
@@ -730,12 +658,9 @@
         } else {
 
           remaining--;
+
         }
 
-
-        /* =====================
-           RESET TIME
-        ===================== */
 
         if (data.resetAt) {
 
@@ -743,24 +668,23 @@
             new Date(
               data.resetAt
             ).getTime();
+
         }
 
 
-        /* =====================
-           SAVE
-        ===================== */
+        /* ADD POINT */
+
+        points++;
+
 
         localStorage.setItem(
           "nexo_points",
-          String(points)
+          points
         );
+
 
         saveLimit();
 
-
-        /* =====================
-           SCREEN
-        ===================== */
 
         document.getElementById(
           "points"
@@ -771,9 +695,7 @@
         updateLimit();
 
 
-        /* =====================
-           +1
-        ===================== */
+        /* +1 ANIMATION */
 
         const plus =
           document.createElement(
@@ -804,7 +726,9 @@
 
         setTimeout(
           function () {
+
             plus.remove();
+
           },
           800
         );
@@ -812,29 +736,23 @@
 
       } catch (error) {
 
-        console.error(
-          "NEXORA ERROR:",
-          error
-        );
-
+        console.error(error);
 
         alert(
-          "خطا در اتصال\n\n" +
-          (
-            error?.message ||
-            String(error)
-          )
+          "خطا در اتصال به سرور."
         );
-
 
       } finally {
 
         circle.dataset.loading =
           "false";
+
       }
+
     }
 
   </script>
 
 </body>
+
 </html>
