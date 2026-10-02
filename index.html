@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -102,6 +103,12 @@
       transform: scale(0.92);
     }
 
+    .tap-circle.disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      filter: grayscale(0.4);
+    }
+
     .nexora-logo {
       font-size: 31px;
       font-weight: 900;
@@ -115,8 +122,45 @@
       letter-spacing: 2px;
     }
 
+    /* =========================
+       QUOTA
+    ========================= */
+
+    .quota-box {
+      margin-top: 20px;
+      padding: 13px 15px;
+      border: 1px solid #28283b;
+      border-radius: 14px;
+      background: #11111b;
+    }
+
+    .quota-title {
+      color: #8b8b9d;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+    }
+
+    .quota-count {
+      margin-top: 5px;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .timer-label {
+      margin-top: 8px;
+      color: #8b8b9d;
+      font-size: 11px;
+    }
+
+    .timer {
+      margin-top: 3px;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
     .menu {
-      margin-top: 55px;
+      margin-top: 35px;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
@@ -164,13 +208,19 @@
       </button>
     </div>
 
+
     <div class="points-box">
-      <div class="points" id="points">0</div>
+
+      <div class="points" id="points">
+        0
+      </div>
 
       <div class="points-label">
         NEXO POINTS
       </div>
+
     </div>
+
 
     <div class="tap-container">
 
@@ -188,21 +238,57 @@
 
     </div>
 
-    <div class="tap-text">
+
+    <div class="tap-text" id="tapText">
       TAP TO EARN +1
     </div>
 
+
+    <!-- =========================
+         QUOTA
+    ========================= -->
+
+    <div class="quota-box">
+
+      <div class="quota-title">
+        TAP QUOTA
+      </div>
+
+      <div class="quota-count" id="quota">
+        1000 / 1000
+      </div>
+
+      <div class="timer-label">
+        RESET IN
+      </div>
+
+      <div class="timer" id="timer">
+        08:00:00
+      </div>
+
+    </div>
+
+
     <div class="menu">
 
-      <button type="button" onclick="showMessage('Tasks coming soon')">
+      <button
+        type="button"
+        onclick="showMessage('Tasks coming soon')"
+      >
         📋 Tasks
       </button>
 
-      <button type="button" onclick="showMessage('Referral coming soon')">
+      <button
+        type="button"
+        onclick="showMessage('Referral coming soon')"
+      >
         👥 Referral
       </button>
 
-      <button type="button" onclick="showMessage('Ranking coming soon')">
+      <button
+        type="button"
+        onclick="showMessage('Ranking coming soon')"
+      >
         🏆 Ranking
       </button>
 
@@ -210,7 +296,12 @@
 
   </div>
 
-  <div class="message" id="message"></div>
+
+  <div
+    class="message"
+    id="message"
+  ></div>
+
 
   <script>
 
@@ -228,7 +319,10 @@
 
     let telegramUser = null;
 
-    if (window.Telegram && window.Telegram.WebApp) {
+    if (
+      window.Telegram &&
+      window.Telegram.WebApp
+    ) {
 
       Telegram.WebApp.ready();
       Telegram.WebApp.expand();
@@ -237,40 +331,55 @@
         Telegram.WebApp.initDataUnsafe &&
         Telegram.WebApp.initDataUnsafe.user
       ) {
+
         telegramUser =
           Telegram.WebApp.initDataUnsafe.user;
+
       }
+
     }
 
 
     // ==============================
-    // LOCAL POINTS
+    // POINTS
     // ==============================
 
     let points = Number(
-      localStorage.getItem("nexora_points") || 0
+      localStorage.getItem(
+        "nexora_points"
+      ) || 0
     );
 
     updatePoints();
 
 
     // ==============================
-    // TAP LOCK
+    // QUOTA
     // ==============================
+
+    const LIMIT = 1000;
+
+    let used = 0;
+
+    let resetAt = null;
 
     let tapping = false;
 
+    let timerInterval = null;
+
 
     // ==============================
-    // TAP TO EARN
+    // INITIAL LOAD
     // ==============================
 
-    async function tapEarn() {
+    loadQuota();
 
-      // Prevent accidental double request
-      if (tapping) {
-        return;
-      }
+
+    // ==============================
+    // LOAD QUOTA FROM SERVER
+    // ==============================
+
+    async function loadQuota() {
 
       if (!telegramUser) {
 
@@ -281,74 +390,67 @@
         return;
       }
 
-      tapping = true;
 
       try {
 
-        const response = await fetch(
-          API_URL,
-          {
-            method: "POST",
+        const response =
+          await fetch(
+            API_URL,
+            {
+              method: "POST",
 
-            headers: {
-              "Content-Type": "application/json"
-            },
+              headers: {
+                "Content-Type":
+                  "application/json"
+              },
 
-            body: JSON.stringify({
+              body:
+                JSON.stringify({
+                  action:
+                    "status",
 
-              action: "tap",
-
-              telegram_user: telegramUser
-
-            })
-          }
-        );
-
-
-        let data;
-
-        try {
-
-          data = await response.json();
-
-        } catch (error) {
-
-          throw new Error(
-            "Invalid server response"
+                  telegram_user:
+                    telegramUser
+                })
+            }
           );
-        }
 
 
-        // Server error
+        const data =
+          await response.json();
+
+
         if (!response.ok) {
 
           throw new Error(
             data.error ||
-            "Server error: " + response.status
+            "Unable to load quota"
           );
+
         }
 
 
-        // Application error
         if (!data.success) {
 
           throw new Error(
             data.error ||
-            "Tap failed"
+            "Unable to load quota"
           );
+
         }
 
 
         // ==========================
-        // ADD SERVER CONFIRMED POINT
+        // SERVER POINTS
         // ==========================
 
-        const added =
-          Number(data.added || 0);
+        if (
+          typeof data.points ===
+          "number"
+        ) {
 
-        if (added > 0) {
-
-          points += added;
+          points =
+            data.points;
 
           localStorage.setItem(
             "nexora_points",
@@ -357,25 +459,228 @@
 
           updatePoints();
 
-          showPlusOne();
+        }
+
+
+        // ==========================
+        // SERVER QUOTA
+        // ==========================
+
+        used =
+          Number(
+            data.used || 0
+          );
+
+        resetAt =
+          data.resetAt
+            ? new Date(
+                data.resetAt
+              ).getTime()
+            : null;
+
+
+        updateQuota();
+
+        startTimer();
+
+      } catch (error) {
+
+        console.error(
+          "NEXORA STATUS ERROR:",
+          error
+        );
+
+        showMessage(
+          error.message ||
+          "Connection error"
+        );
+
+      }
+
+    }
+
+
+    // ==============================
+    // TAP TO EARN
+    // ==============================
+
+    async function tapEarn() {
+
+      if (tapping) {
+        return;
+      }
+
+
+      if (!telegramUser) {
+
+        showMessage(
+          "Open NEXORA inside Telegram."
+        );
+
+        return;
+      }
+
+
+      // Local UI protection only.
+      // Real limit is checked by server.
+
+      if (
+        used >= LIMIT
+      ) {
+
+        showMessage(
+          "1000 taps reached. Wait for reset."
+        );
+
+        return;
+
+      }
+
+
+      tapping = true;
+
+
+      try {
+
+        const response =
+          await fetch(
+            API_URL,
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json"
+              },
+
+              body:
+                JSON.stringify({
+
+                  action:
+                    "tap",
+
+                  telegram_user:
+                    telegramUser
+
+                })
+            }
+          );
+
+
+        let data;
+
+
+        try {
+
+          data =
+            await response.json();
+
+        } catch {
+
+          throw new Error(
+            "Invalid server response"
+          );
 
         }
 
 
         // ==========================
-        // LIMIT MESSAGE
+        // LIMIT REACHED
         // ==========================
 
         if (
-          typeof data.remaining === "number" &&
-          data.remaining <= 0
+          response.status === 429 &&
+          data.error ===
+            "LIMIT_REACHED"
         ) {
+
+          used =
+            LIMIT;
+
+          resetAt =
+            data.resetAt
+              ? new Date(
+                  data.resetAt
+                ).getTime()
+              : null;
+
+          updateQuota();
+
+          startTimer();
 
           showMessage(
             "1000 taps reached. Reset in 8 hours."
           );
 
+          return;
         }
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            data.error ||
+            "Server error: " +
+            response.status
+          );
+
+        }
+
+
+        if (!data.success) {
+
+          throw new Error(
+            data.error ||
+            "Tap failed"
+          );
+
+        }
+
+
+        // ==========================
+        // SERVER CONFIRMED POINTS
+        // ==========================
+
+        if (
+          typeof data.points ===
+          "number"
+        ) {
+
+          points =
+            data.points;
+
+          localStorage.setItem(
+            "nexora_points",
+            String(points)
+          );
+
+          updatePoints();
+
+        }
+
+
+        // ==========================
+        // SERVER QUOTA
+        // ==========================
+
+        used =
+          Number(
+            data.used || 0
+          );
+
+        resetAt =
+          data.resetAt
+            ? new Date(
+                data.resetAt
+              ).getTime()
+            : null;
+
+
+        updateQuota();
+
+        startTimer();
+
+        showPlusOne();
 
       } catch (error) {
 
@@ -394,6 +699,7 @@
         tapping = false;
 
       }
+
     }
 
 
@@ -412,43 +718,247 @@
 
 
     // ==============================
+    // UPDATE QUOTA
+    // ==============================
+
+    function updateQuota() {
+
+      const remaining =
+        Math.max(
+          0,
+          LIMIT - used
+        );
+
+
+      document.getElementById(
+        "quota"
+      ).innerText =
+        remaining +
+        " / " +
+        LIMIT;
+
+
+      const tapButton =
+        document.getElementById(
+          "tapButton"
+        );
+
+      const tapText =
+        document.getElementById(
+          "tapText"
+        );
+
+
+      if (
+        remaining <= 0
+      ) {
+
+        tapButton.classList.add(
+          "disabled"
+        );
+
+        tapText.innerText =
+          "QUOTA FULL";
+
+      } else {
+
+        tapButton.classList.remove(
+          "disabled"
+        );
+
+        tapText.innerText =
+          "TAP TO EARN +1";
+
+      }
+
+    }
+
+
+    // ==============================
+    // TIMER
+    // ==============================
+
+    function startTimer() {
+
+      if (timerInterval) {
+
+        clearInterval(
+          timerInterval
+        );
+
+      }
+
+
+      updateTimer();
+
+
+      timerInterval =
+        setInterval(
+          updateTimer,
+          1000
+        );
+
+    }
+
+
+    function updateTimer() {
+
+      if (!resetAt) {
+
+        document.getElementById(
+          "timer"
+        ).innerText =
+          "08:00:00";
+
+        return;
+
+      }
+
+
+      const remainingMs =
+        Math.max(
+          0,
+          resetAt -
+          Date.now()
+        );
+
+
+      const totalSeconds =
+        Math.ceil(
+          remainingMs / 1000
+        );
+
+
+      if (
+        totalSeconds <= 0
+      ) {
+
+        used = 0;
+
+        resetAt = null;
+
+        updateQuota();
+
+        document.getElementById(
+          "timer"
+        ).innerText =
+          "08:00:00";
+
+
+        // Ask server for the
+        // authoritative new window.
+
+        loadQuota();
+
+        return;
+
+      }
+
+
+      const hours =
+        Math.floor(
+          totalSeconds / 3600
+        );
+
+      const minutes =
+        Math.floor(
+          (
+            totalSeconds % 3600
+          ) / 60
+        );
+
+      const seconds =
+        totalSeconds % 60;
+
+
+      document.getElementById(
+        "timer"
+      ).innerText =
+
+        String(hours)
+          .padStart(2, "0") +
+
+        ":" +
+
+        String(minutes)
+          .padStart(2, "0") +
+
+        ":" +
+
+        String(seconds)
+          .padStart(2, "0");
+
+    }
+
+
+    // ==============================
     // +1 ANIMATION
     // ==============================
 
     function showPlusOne() {
 
       const effect =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
-      effect.innerText = "+1";
 
-      effect.style.position = "fixed";
-      effect.style.left = "50%";
-      effect.style.top = "45%";
+      effect.innerText =
+        "+1";
+
+      effect.style.position =
+        "fixed";
+
+      effect.style.left =
+        "50%";
+
+      effect.style.top =
+        "45%";
+
       effect.style.transform =
         "translate(-50%, -50%)";
-      effect.style.fontSize = "28px";
-      effect.style.fontWeight = "900";
-      effect.style.color = "#7467ff";
-      effect.style.pointerEvents = "none";
-      effect.style.zIndex = "9999";
+
+      effect.style.fontSize =
+        "28px";
+
+      effect.style.fontWeight =
+        "900";
+
+      effect.style.color =
+        "#7467ff";
+
+      effect.style.pointerEvents =
+        "none";
+
+      effect.style.zIndex =
+        "9999";
+
       effect.style.transition =
         "all 0.6s ease";
 
-      document.body.appendChild(effect);
+
+      document.body.appendChild(
+        effect
+      );
+
 
       requestAnimationFrame(() => {
 
-        effect.style.top = "35%";
-        effect.style.opacity = "0";
+        effect.style.top =
+          "35%";
+
+        effect.style.opacity =
+          "0";
 
       });
+
 
       setTimeout(() => {
 
         effect.remove();
 
       }, 650);
+
     }
 
 
@@ -456,21 +966,28 @@
     // MESSAGE
     // ==============================
 
-    function showMessage(text) {
+    function showMessage(
+      text
+    ) {
 
       const message =
         document.getElementById(
           "message"
         );
 
-      message.innerText = text;
+
+      message.innerText =
+        text;
+
 
       message.style.display =
         "block";
 
+
       clearTimeout(
         window.nexoraMessageTimer
       );
+
 
       window.nexoraMessageTimer =
         setTimeout(() => {
@@ -479,9 +996,11 @@
             "none";
 
         }, 1800);
+
     }
 
   </script>
 
 </body>
 </html>
+```
