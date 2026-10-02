@@ -1,9 +1,13 @@
 ```html
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
 
   <title>NEXORA</title>
 
@@ -22,8 +26,8 @@
       width: 100%;
       min-height: 100%;
       background: #050711;
-      color: #fff;
-      font-family: Arial, sans-serif;
+      color: #ffffff;
+      font-family: Arial, Helvetica, sans-serif;
       overflow-x: hidden;
     }
 
@@ -34,13 +38,13 @@
     body::before {
       content: "";
       position: fixed;
-      width: 360px;
-      height: 360px;
-      top: -160px;
+      width: 380px;
+      height: 380px;
+      top: -170px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(76, 110, 255, 0.20);
-      filter: blur(90px);
+      background: rgba(78, 110, 255, 0.20);
+      filter: blur(95px);
       border-radius: 50%;
       pointer-events: none;
     }
@@ -49,7 +53,7 @@
       width: 100%;
       max-width: 480px;
       min-height: 100vh;
-      margin: auto;
+      margin: 0 auto;
       padding: 22px 17px 35px;
       position: relative;
       z-index: 1;
@@ -62,28 +66,49 @@
     .header {
       text-align: center;
       padding-top: 8px;
-      margin-bottom: 24px;
+      margin-bottom: 25px;
     }
 
     .logo {
-      font-size: 34px;
+      font-size: 36px;
       font-weight: 900;
-      letter-spacing: 6px;
+      letter-spacing: 7px;
 
       background:
         linear-gradient(
           90deg,
           #ffffff,
-          #a8c0ff,
-          #6d8dff
+          #a9c1ff,
+          #6f91ff
         );
 
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+
+      text-shadow:
+        0 0 25px rgba(100,140,255,0.15);
+    }
+
+    .brand-line {
+      width: 45px;
+      height: 3px;
+      margin: 9px auto 0;
+
+      border-radius: 10px;
+
+      background:
+        linear-gradient(
+          90deg,
+          #5d7dff,
+          #9eb5ff
+        );
+
+      box-shadow:
+        0 0 12px rgba(90,120,255,0.5);
     }
 
     .subtitle {
-      margin-top: 7px;
+      margin-top: 9px;
       color: #69758d;
       font-size: 10px;
       letter-spacing: 3px;
@@ -98,39 +123,39 @@
       overflow: hidden;
 
       width: 100%;
-      padding: 24px 20px;
+      padding: 25px 20px;
 
-      border-radius: 26px;
+      border-radius: 27px;
 
       background:
         linear-gradient(
           145deg,
-          rgba(28, 39, 67, 0.97),
-          rgba(10, 14, 26, 0.97)
+          rgba(29, 40, 69, 0.98),
+          rgba(9, 13, 25, 0.98)
         );
 
-      border: 1px solid rgba(130, 160, 235, 0.17);
+      border: 1px solid rgba(130,160,235,0.17);
 
       box-shadow:
-        0 20px 50px rgba(0,0,0,0.38),
+        0 20px 50px rgba(0,0,0,0.40),
         inset 0 1px 0 rgba(255,255,255,0.05);
     }
 
-    .balance-card::after {
+    .balance-card::before {
       content: "";
 
       position: absolute;
 
-      width: 180px;
-      height: 180px;
+      width: 170px;
+      height: 170px;
 
-      left: -90px;
-      top: -100px;
+      left: -80px;
+      top: -90px;
 
       border-radius: 50%;
 
       background:
-        rgba(83, 120, 255, 0.12);
+        rgba(75,110,255,0.13);
 
       filter: blur(35px);
 
@@ -143,10 +168,10 @@
 
       text-align: center;
 
-      color: #8490a7;
+      color: #8290aa;
       font-size: 12px;
 
-      margin-bottom: 10px;
+      margin-bottom: 11px;
     }
 
     .points {
@@ -155,7 +180,7 @@
 
       text-align: center;
 
-      font-size: 48px;
+      font-size: 50px;
       line-height: 1;
 
       font-weight: 900;
@@ -164,7 +189,7 @@
         linear-gradient(
           180deg,
           #ffffff,
-          #a8c0ff
+          #a9c1ff
         );
 
       -webkit-background-clip: text;
@@ -179,13 +204,13 @@
 
       margin-top: 9px;
 
-      color: #59657c;
+      color: #5c6981;
       font-size: 10px;
       letter-spacing: 2px;
     }
 
     /* =========================
-       TAP
+       TAP AREA
     ========================= */
 
     .tap-section {
@@ -193,12 +218,12 @@
       flex-direction: column;
       align-items: center;
 
-      margin: 38px 0 34px;
+      margin: 39px 0 33px;
     }
 
     .tap-ring {
-      width: 250px;
-      height: 250px;
+      width: 252px;
+      height: 252px;
 
       border-radius: 50%;
 
@@ -209,50 +234,55 @@
       background:
         radial-gradient(
           circle,
-          rgba(65,105,220,0.17),
-          rgba(20,30,55,0.08) 50%,
+          rgba(70,110,230,0.17),
+          rgba(20,30,55,0.07) 52%,
           transparent 70%
         );
 
       box-shadow:
-        0 0 0 1px rgba(90,130,230,0.13),
-        0 0 65px rgba(60,100,230,0.14);
+        0 0 0 1px rgba(90,130,230,0.14),
+        0 0 65px rgba(60,100,230,0.15);
     }
 
     .tap-btn {
-      width: 194px;
-      height: 194px;
+      width: 196px;
+      height: 196px;
 
       border-radius: 50%;
 
-      border: 1px solid rgba(160,190,255,0.32);
+      border: 1px solid rgba(170,195,255,0.34);
 
       background:
         radial-gradient(
-          circle at 34% 23%,
-          #5879be 0%,
-          #304e88 32%,
-          #1a2d51 66%,
-          #0b1529 100%
+          circle at 34% 22%,
+          #5c7fc5 0%,
+          #304f8a 32%,
+          #1b2e53 65%,
+          #0b152a 100%
         );
 
       color: #ffffff;
 
       font-size: 31px;
       font-weight: 900;
-      letter-spacing: 4px;
+
+      letter-spacing: 5px;
 
       cursor: pointer;
       user-select: none;
 
+      outline: none;
+
+      touch-action: manipulation;
+
       box-shadow:
-        0 18px 42px rgba(0,0,0,0.58),
-        0 0 40px rgba(70,110,220,0.25),
-        inset 0 3px 13px rgba(255,255,255,0.14),
-        inset 0 -12px 20px rgba(0,0,0,0.32);
+        0 18px 43px rgba(0,0,0,0.58),
+        0 0 42px rgba(70,110,220,0.27),
+        inset 0 3px 14px rgba(255,255,255,0.15),
+        inset 0 -13px 21px rgba(0,0,0,0.34);
 
       transition:
-        transform 0.055s ease,
+        transform 0.06s ease,
         filter 0.08s ease;
     }
 
@@ -262,7 +292,7 @@
     }
 
     .tap-btn.disabled {
-      opacity: 0.45;
+      opacity: 0.42;
       cursor: not-allowed;
     }
 
@@ -274,15 +304,15 @@
     }
 
     /* =========================
-       TAP QUEUE
+       QUEUE
     ========================= */
 
     .queue {
-      min-height: 17px;
+      min-height: 16px;
 
       margin-top: 7px;
 
-      color: #7485a7;
+      color: #8197c4;
 
       font-size: 10px;
 
@@ -311,29 +341,30 @@
     }
 
     .stat-card {
-      padding: 17px 14px;
+      padding: 18px 15px;
 
       border-radius: 20px;
 
       background:
-        rgba(14,20,34,0.92);
+        rgba(14,20,34,0.93);
 
-      border: 1px solid rgba(110,135,190,0.13);
+      border:
+        1px solid rgba(110,135,190,0.14);
 
       box-shadow:
-        0 10px 27px rgba(0,0,0,0.22);
+        0 10px 28px rgba(0,0,0,0.23);
     }
 
     .stat-title {
-      color: #68758c;
+      color: #69768d;
 
       font-size: 10px;
 
-      margin-bottom: 7px;
+      margin-bottom: 8px;
     }
 
     .stat-value {
-      color: #bdd0f4;
+      color: #bfd1f4;
 
       font-size: 19px;
 
@@ -376,7 +407,7 @@
     }
 
     /* =========================
-       +1
+       +1 EFFECT
     ========================= */
 
     .tap-effect {
@@ -386,14 +417,14 @@
 
       z-index: 9999;
 
-      color: #a9c5ff;
+      color: #b3caff;
 
       font-size: 26px;
 
       font-weight: 900;
 
       text-shadow:
-        0 0 15px rgba(100,150,255,0.75);
+        0 0 15px rgba(100,150,255,0.8);
 
       animation:
         floatUp 0.55s ease-out forwards;
@@ -441,10 +472,13 @@
       }
 
       .points {
-        font-size: 42px;
+        font-size: 43px;
+      }
+
+      .logo {
+        font-size: 32px;
       }
     }
-
   </style>
 </head>
 
@@ -452,13 +486,13 @@
 
   <main class="app">
 
-    <!-- HEADER -->
-
     <header class="header">
 
       <div class="logo">
         NEXORA
       </div>
+
+      <div class="brand-line"></div>
 
       <div class="subtitle">
         TAP • EARN • BUILD
@@ -467,12 +501,10 @@
     </header>
 
 
-    <!-- BALANCE -->
-
     <section class="balance-card">
 
       <div class="balance-label">
-        موجودی امتیاز
+        Your Balance
       </div>
 
       <div
@@ -489,8 +521,6 @@
     </section>
 
 
-    <!-- TAP -->
-
     <section class="tap-section">
 
       <div class="tap-ring">
@@ -506,27 +536,23 @@
       </div>
 
       <div class="tap-hint">
-        برای دریافت امتیاز ضربه بزن
+        Tap to earn points
       </div>
 
       <div
         id="queue"
         class="queue"
-      >
-        در حال ارسال...
-      </div>
+      ></div>
 
     </section>
 
-
-    <!-- STATS -->
 
     <section class="stats">
 
       <div class="stat-card">
 
         <div class="stat-title">
-          درخواست باقی‌مانده
+          Taps Remaining
         </div>
 
         <div
@@ -542,7 +568,7 @@
       <div class="stat-card">
 
         <div class="stat-title">
-          زمان تا ریست
+          Reset In
         </div>
 
         <div
@@ -556,8 +582,6 @@
 
     </section>
 
-
-    <!-- ERROR -->
 
     <div
       id="errorBox"
@@ -581,16 +605,13 @@
 
 
     if (tg) {
-
       tg.ready();
-
       tg.expand();
-
     }
 
 
     // ==========================================
-    // SUPABASE API
+    // SUPABASE
     // ==========================================
 
     const API_URL =
@@ -631,7 +652,7 @@
 
 
     // ==========================================
-    // LOCAL DATA
+    // DATA
     // ==========================================
 
     let points =
@@ -647,10 +668,7 @@
 
 
     if (!Number.isFinite(remaining)) {
-
-      remaining =
-        MAX_REQUESTS;
-
+      remaining = MAX_REQUESTS;
     }
 
 
@@ -695,7 +713,7 @@
 
 
     // ==========================================
-    // UI
+    // UPDATE UI
     // ==========================================
 
     function updateUI() {
@@ -721,10 +739,9 @@
       if (tapQueue > 0) {
 
         queueEl.textContent =
-          "در صف: " +
+          "Sending " +
           tapQueue.toLocaleString("en-US") +
-          " TAP";
-
+          " taps...";
 
         queueEl.classList.add(
           "visible"
@@ -732,9 +749,7 @@
 
       } else {
 
-        queueEl.textContent =
-          "";
-
+        queueEl.textContent = "";
 
         queueEl.classList.remove(
           "visible"
@@ -757,7 +772,6 @@
           "08:00:00";
 
         return;
-
       }
 
 
@@ -798,7 +812,6 @@
 
 
         return;
-
       }
 
 
@@ -843,7 +856,6 @@
       errorBox.style.display =
         "block";
 
-
       errorBox.textContent =
         message;
 
@@ -855,7 +867,6 @@
       errorBox.style.display =
         "none";
 
-
       errorBox.textContent =
         "";
 
@@ -863,7 +874,7 @@
 
 
     // ==========================================
-    // +1 EFFECT
+    // TAP EFFECT
     // ==========================================
 
     function showTapEffect() {
@@ -962,319 +973,13 @@
       try {
 
         data =
-          JSON.parse(
-            rawText
-          );
+          JSON.parse(rawText);
 
       } catch {
 
         throw new Error(
-          "پاسخ نامعتبر از سرور: " +
+          "Invalid server response: " +
           rawText
         );
 
-      }
-
-
-      if (
-        !response.ok ||
-        !data.success
-      ) {
-
-        throw new Error(
-
-          data.error ||
-
-          data.message ||
-
-          (
-            "خطای سرور " +
-            response.status
-          )
-
-        );
-
-      }
-
-
-      // ================================
-      // UPDATE POINTS
-      // ================================
-
-      if (
-        typeof data.points !==
-        "undefined"
-      ) {
-
-        points =
-          Number(
-            data.points
-          );
-
-      } else {
-
-        points =
-          points + 1;
-
-      }
-
-
-      // ================================
-      // UPDATE REMAINING
-      // ================================
-
-      if (
-        typeof data.remaining !==
-        "undefined"
-      ) {
-
-        remaining =
-          Number(
-            data.remaining
-          );
-
-      } else {
-
-        remaining =
-          Math.max(
-            0,
-            remaining - 1
-          );
-
-      }
-
-
-      // ================================
-      // RESET TIME
-      // ================================
-
-      if (data.resetAt) {
-
-        resetAt =
-          new Date(
-            data.resetAt
-          ).getTime();
-
-
-        localStorage.setItem(
-          "nexo_reset_at",
-          String(resetAt)
-        );
-
-      }
-
-
-      // ================================
-      // SAVE
-      // ================================
-
-      localStorage.setItem(
-        "nexo_points",
-        String(points)
-      );
-
-
-      localStorage.setItem(
-        "nexo_remaining",
-        String(remaining)
-      );
-
-
-      updateUI();
-
-      showTapEffect();
-
-    }
-
-
-    // ==========================================
-    // PROCESS TAP QUEUE
-    // ==========================================
-
-    async function processTapQueue() {
-
-      if (processing) {
-        return;
-      }
-
-
-      if (tapQueue <= 0) {
-        return;
-      }
-
-
-      if (remaining <= 0) {
-
-        tapQueue = 0;
-
-        updateQueueUI();
-
-        tapBtn.classList.add(
-          "disabled"
-        );
-
-        showError(
-          "سقف ۱۰۰۰ درخواست شما تمام شده است."
-        );
-
-        return;
-
-      }
-
-
-      processing = true;
-
-
-      while (
-        tapQueue > 0 &&
-        remaining > 0
-      ) {
-
-        tapQueue--;
-
-        updateQueueUI();
-
-
-        try {
-
-          await sendOneTap();
-
-
-        } catch (error) {
-
-          console.error(
-            "TAP ERROR:",
-            error
-          );
-
-
-          const message =
-            error &&
-            error.message
-              ? error.message
-              : String(error);
-
-
-          showError(
-            "خطای سرور: " +
-            message
-          );
-
-
-          /*
-            TAPهایی که هنوز در صف هستند
-            از بین نمی‌روند.
-          */
-
-          processing = false;
-
-          updateQueueUI();
-
-          return;
-
-        }
-
-      }
-
-
-      processing = false;
-
-
-      updateQueueUI();
-
-
-      if (remaining <= 0) {
-
-        tapBtn.classList.add(
-          "disabled"
-        );
-
-      }
-
-    }
-
-
-    // ==========================================
-    // TAP CLICK
-    // ==========================================
-
-    function tap() {
-
-      if (remaining <= 0) {
-
-        showError(
-          "سقف ۱۰۰۰ درخواست شما تمام شده است."
-        );
-
-        return;
-
-      }
-
-
-      clearError();
-
-
-      /*
-        هر لمس یک TAP به صف اضافه می‌کند.
-        بنابراین اگر خیلی سریع ۱۰ بار بزنی،
-        هر ۱۰ تا ثبت می‌شوند.
-      */
-
-      tapQueue++;
-
-
-      updateQueueUI();
-
-
-      processTapQueue();
-
-    }
-
-
-    // ==========================================
-    // BUTTON
-    // ==========================================
-
-    tapBtn.addEventListener(
-      "click",
-      tap
-    );
-
-
-    /*
-      جلوگیری از رفتار اضافی لمس موبایل،
-      بدون غیرفعال کردن TAP.
-    */
-
-    tapBtn.addEventListener(
-      "touchstart",
-      function(e) {
-
-        e.preventDefault();
-
-      },
-      {
-        passive: false
-      }
-    );
-
-
-    // ==========================================
-    // START
-    // ==========================================
-
-    updateUI();
-
-    updateTimer();
-
-
-    setInterval(
-      updateTimer,
-      1000
-    );
-
-  </script>
-
-</body>
-</html>
-```
+     
