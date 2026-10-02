@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>NEXORA</title>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -12,231 +13,138 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
       min-height: 100vh;
-      background: radial-gradient(
-        circle at top,
-        #172b65 0%,
-        #080b18 45%,
-        #05060d 100%
-      );
+      background: #080810;
       color: white;
-      padding: 20px 16px 40px;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
     }
 
     .app {
-      max-width: 500px;
-      margin: auto;
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      padding: 25px 20px;
+      text-align: center;
     }
 
     .header {
-      text-align: center;
-      margin-bottom: 22px;
-    }
-
-    .logo {
-      width: 85px;
-      height: 85px;
-      margin: auto;
-      border-radius: 50%;
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #00d9ff, #735cff, #d946ef);
-      box-shadow: 0 0 35px rgba(0, 210, 255, 0.35);
-      font-size: 48px;
-      font-weight: 900;
     }
 
-    .title {
-      margin-top: 12px;
-      font-size: 30px;
-      font-weight: 900;
-      letter-spacing: 4px;
+    .logo-title {
+      font-size: 25px;
+      font-weight: 800;
+      letter-spacing: 2px;
     }
 
-    .subtitle {
-      margin-top: 6px;
-      color: #9da7c7;
-      font-size: 12px;
-      letter-spacing: 1px;
+    .profile {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid #44445c;
+      background: #151522;
+      color: white;
+      font-size: 20px;
     }
 
-    .card {
-      background: rgba(18, 23, 45, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 22px;
-      padding: 20px;
-      margin-bottom: 14px;
-    }
-
-    .points-label {
-      color: #9da7c7;
-      font-size: 13px;
+    .points-box {
+      margin-top: 45px;
     }
 
     .points {
-      margin: 8px 0;
-      font-size: 40px;
-      font-weight: 900;
-      background: linear-gradient(90deg, #00e5ff, #a855f7);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-size: 42px;
+      font-weight: 800;
     }
 
-    .streak {
-      color: #ffb84d;
-      font-size: 14px;
+    .points-label {
+      margin-top: 5px;
+      color: #8b8b9d;
+      font-size: 13px;
+      letter-spacing: 2px;
     }
 
-    .claim {
-      width: 100%;
-      margin-top: 17px;
-      padding: 16px;
-      border: none;
-      border-radius: 16px;
-      background: linear-gradient(90deg, #087fff, #8b5cf6);
-      color: white;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .claim:active {
-      transform: scale(0.98);
-    }
-
-    /* LIMIT CIRCLE */
-
-    .limit-section {
-      text-align: center;
-      margin: 18px 0;
-    }
-
-    .limit-circle {
-      width: 112px;
-      height: 112px;
-      margin: 0 auto;
-      border-radius: 50%;
-      background: conic-gradient(
-        #00d9ff 100%,
-        #202742 0%
-      );
+    .tap-container {
+      margin-top: 55px;
       display: flex;
-      align-items: center;
       justify-content: center;
-      cursor: pointer;
+    }
+
+    .tap-circle {
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #25234a, #11111d);
+      border: 5px solid #7467ff;
       box-shadow:
-        0 0 25px rgba(0, 217, 255, 0.25),
-        0 0 50px rgba(115, 92, 255, 0.12);
-    }
+        0 0 25px rgba(116, 103, 255, 0.45),
+        0 0 70px rgba(116, 103, 255, 0.15);
 
-    .circle-inner {
-      width: 94px;
-      height: 94px;
-      border-radius: 50%;
-      background: #0b1022;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
+
+      cursor: pointer;
+      user-select: none;
+
+      transition: transform 0.08s;
     }
 
-    #remainingCount {
-      font-size: 23px;
+    .tap-circle:active {
+      transform: scale(0.92);
+    }
+
+    .nexora-logo {
+      font-size: 31px;
       font-weight: 900;
+      letter-spacing: 3px;
     }
 
-    .circle-label {
-      color: #7f89a8;
-      font-size: 9px;
-      margin-top: 4px;
-    }
-
-    .limit-box {
-      display: none;
-      margin-top: 12px;
-      padding: 17px;
-      border-radius: 18px;
-      background: #11162b;
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .limit-title {
-      color: #9da7c7;
-      font-size: 12px;
-      margin-bottom: 10px;
-    }
-
-    #limitText {
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    #limitTimer {
-      margin-top: 7px;
-      color: #00d9ff;
-      font-size: 14px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
+    .tap-text {
+      margin-top: 28px;
+      color: #8b8b9d;
+      font-size: 15px;
+      letter-spacing: 2px;
     }
 
     .menu {
-      padding: 19px 10px;
-      border-radius: 18px;
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      background: #11162b;
-      color: white;
-      text-align: center;
-      cursor: pointer;
+      margin-top: 55px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
     }
 
-    .menu:active {
-      transform: scale(0.98);
-    }
-
-    .menu-icon {
-      font-size: 28px;
-      margin-bottom: 7px;
-    }
-
-    .menu-title {
-      font-size: 14px;
-      font-weight: bold;
-    }
-
-    .menu-desc {
-      margin-top: 4px;
-      color: #7f89a8;
-      font-size: 11px;
-    }
-
-    .footer {
-      margin-top: 25px;
-      text-align: center;
-      color: #626b88;
-      font-size: 11px;
-    }
-
-    #message {
-      position: fixed;
-      left: 20px;
-      right: 20px;
-      bottom: 20px;
-      display: none;
-      padding: 14px;
+    .menu button {
+      padding: 14px 5px;
+      border: 1px solid #28283b;
       border-radius: 14px;
-      background: #151b32;
-      border: 1px solid #303858;
-      text-align: center;
-      z-index: 100;
+      background: #11111b;
+      color: white;
+      font-size: 12px;
+    }
+
+    .menu button:active {
+      transform: scale(0.96);
+    }
+
+    .message {
+      position: fixed;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      background: #20202d;
+      border: 1px solid #38384d;
+      padding: 10px 18px;
+      border-radius: 12px;
+      display: none;
+      white-space: nowrap;
     }
   </style>
 </head>
@@ -246,501 +154,110 @@
   <div class="app">
 
     <div class="header">
-      <div class="logo">N</div>
+      <div class="logo-title">NEXORA</div>
 
-      <div class="title">
-        NEXORA
-      </div>
+      <button class="profile">
+        👤
+      </button>
+    </div>
 
-      <div class="subtitle">
-        EARN • COMPLETE • INVITE • RISE
+    <div class="points-box">
+      <div class="points" id="points">0</div>
+
+      <div class="points-label">
+        NEXO POINTS
       </div>
     </div>
 
-    <div class="card">
+    <div class="tap-container">
 
-      <div class="points-label">
-        YOUR NEXO POINTS
+      <div class="tap-circle" onclick="tapEarn()">
+
+        <div class="nexora-logo">
+          NEXORA
+        </div>
+
       </div>
 
-      <div class="points" id="points">
-        0
-      </div>
+    </div>
 
-      <div class="streak">
-        🔥 Daily Streak:
-        <span id="streak">1</span>
-        day
-      </div>
+    <div class="tap-text">
+      TAP TO EARN +1
+    </div>
 
-      <button class="claim" onclick="claimDaily()">
-        🎁 CLAIM DAILY REWARD
+    <div class="menu">
+
+      <button onclick="showMessage('Tasks coming soon')">
+        📋 Tasks
+      </button>
+
+      <button onclick="showMessage('Referral coming soon')">
+        👥 Referral
+      </button>
+
+      <button onclick="showMessage('Ranking coming soon')">
+        🏆 Ranking
       </button>
 
     </div>
 
-    <!-- 8 HOUR LIMIT -->
-
-    <div class="limit-section">
-
-      <div class="limit-circle" onclick="toggleLimit()">
-
-        <div class="circle-inner">
-
-          <div id="remainingCount">
-            1000
-          </div>
-
-          <div class="circle-label">
-            REQUESTS LEFT
-          </div>
-
-        </div>
-
-      </div>
-
-      <div id="limitBox" class="limit-box">
-
-        <div class="limit-title">
-          ⚡ REQUEST LIMIT
-        </div>
-
-        <div id="limitText">
-          1000 / 1000
-        </div>
-
-        <div id="limitTimer">
-          ⏳ 08:00:00
-        </div>
-
-      </div>
-
-    </div>
-
-    <div class="grid">
-
-      <div
-        class="menu"
-        onclick="showMessage('🎯 Tasks will be available soon!')"
-      >
-        <div class="menu-icon">🎯</div>
-        <div class="menu-title">Tasks</div>
-        <div class="menu-desc">Earn points</div>
-      </div>
-
-      <div
-        class="menu"
-        onclick="inviteFriend()"
-      >
-        <div class="menu-icon">👥</div>
-        <div class="menu-title">Invite</div>
-        <div class="menu-desc">Invite friends</div>
-      </div>
-
-      <div
-        class="menu"
-        onclick="showMessage('🏆 Leaderboard is coming soon!')"
-      >
-        <div class="menu-icon">🏆</div>
-        <div class="menu-title">Ranking</div>
-        <div class="menu-desc">Top players</div>
-      </div>
-
-      <div
-        class="menu"
-        onclick="showMessage('👛 Wallet will be available later.')"
-      >
-        <div class="menu-icon">👛</div>
-        <div class="menu-title">Wallet</div>
-        <div class="menu-desc">Connect wallet</div>
-      </div>
-
-    </div>
-
-    <div class="footer">
-      NEXORA © 2026
-    </div>
-
   </div>
 
-  <div id="message"></div>
+  <div class="message" id="message"></div>
 
   <script>
 
-    /* =========================
-       TELEGRAM
-    ========================= */
-
+    // Telegram Mini App
     if (window.Telegram && window.Telegram.WebApp) {
-      window.Telegram.WebApp.ready();
-      window.Telegram.WebApp.expand();
+      Telegram.WebApp.ready();
+      Telegram.WebApp.expand();
+    }
+
+    // Load saved points
+    let points = Number(
+      localStorage.getItem("nexora_points") || 0
+    );
+
+    updatePoints();
+
+
+    // Tap to Earn
+    function tapEarn() {
+
+      points += 1;
+
+      localStorage.setItem(
+        "nexora_points",
+        points
+      );
+
+      updatePoints();
+
     }
 
 
-    /* =========================
-       LOCAL DISPLAY
-    ========================= */
+    // Update points on screen
+    function updatePoints() {
 
-    let points =
-      Number(localStorage.getItem("nexo_points")) || 0;
+      document.getElementById("points").innerText =
+        points.toLocaleString();
 
-    let streak =
-      Number(localStorage.getItem("nexo_streak")) || 1;
-
-
-    document.getElementById("points").innerText =
-      points.toLocaleString();
-
-    document.getElementById("streak").innerText =
-      streak;
-
-
-    /* =========================
-       RATE LIMIT
-    ========================= */
-
-    let limitRemaining = 1000;
-
-    let limitSeconds = 8 * 60 * 60;
-
-    let limitOpen = false;
-
-
-    function toggleLimit() {
-
-      const box =
-        document.getElementById("limitBox");
-
-      limitOpen = !limitOpen;
-
-      box.style.display =
-        limitOpen ? "block" : "none";
     }
 
 
-    function updateLimitUI() {
-
-      document.getElementById(
-        "remainingCount"
-      ).innerText =
-        limitRemaining.toLocaleString();
-
-
-      document.getElementById(
-        "limitText"
-      ).innerText =
-        `${limitRemaining.toLocaleString()} / 1000`;
-
-
-      const hours =
-        Math.floor(limitSeconds / 3600);
-
-      const minutes =
-        Math.floor(
-          (limitSeconds % 3600) / 60
-        );
-
-      const seconds =
-        limitSeconds % 60;
-
-
-      document.getElementById(
-        "limitTimer"
-      ).innerText =
-        `⏳ ${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-    }
-
-
-    function startLimitTimer() {
-
-      setInterval(function() {
-
-        if (limitSeconds > 0) {
-
-          limitSeconds--;
-
-        } else {
-
-          limitRemaining = 1000;
-
-          limitSeconds =
-            8 * 60 * 60;
-        }
-
-        updateLimitUI();
-
-      }, 1000);
-    }
-
-
-    updateLimitUI();
-
-    startLimitTimer();
-
-
-    /* =========================
-       DAILY CLAIM
-    ========================= */
-
-    async function claimDaily() {
-
-      try {
-
-        const tgUser =
-          window.Telegram?.WebApp?.initDataUnsafe?.user;
-
-
-        if (!tgUser?.id) {
-
-          showMessage(
-            "لطفاً از داخل تلگرام وارد شوید"
-          );
-
-          return;
-        }
-
-
-        showMessage(
-          "⏳ در حال بررسی..."
-        );
-
-
-        const response =
-          await fetch(
-            "https://zpejsrxapxozwpeyvfbw.supabase.co/functions/v1/super-action",
-            {
-              method: "POST",
-
-              headers: {
-                "Content-Type": "application/json"
-              },
-
-              body: JSON.stringify({
-                telegram_user: tgUser
-              })
-            }
-          );
-
-
-        const data =
-          await response.json();
-
-
-        console.log(
-          "SUPER ACTION:",
-          data
-        );
-
-
-        /* LIMIT REACHED */
-
-        if (
-          response.status === 429 ||
-          data.error === "LIMIT_REACHED"
-        ) {
-
-          limitRemaining = 0;
-
-          if (data.remainingSeconds) {
-
-            limitSeconds =
-              Number(
-                data.remainingSeconds
-              );
-
-          }
-
-          updateLimitUI();
-
-          showMessage(
-            "⛔ سهمیه ۸ ساعته تمام شده است"
-          );
-
-          return;
-        }
-
-
-        if (!data.success) {
-
-          showMessage(
-            data.message ||
-            "خطا در دریافت پاداش"
-          );
-
-          return;
-        }
-
-
-        /* UPDATE LIMIT */
-
-        if (
-          typeof data.remaining ===
-          "number"
-        ) {
-
-          limitRemaining =
-            data.remaining;
-        }
-
-
-        if (
-          typeof data.remainingSeconds ===
-          "number"
-        ) {
-
-          limitSeconds =
-            data.remainingSeconds;
-        }
-
-
-        updateLimitUI();
-
-
-        /* ALREADY CLAIMED */
-
-        if (data.already_claimed) {
-
-          showMessage(
-            "🎁 پاداش امروز را قبلاً گرفتی"
-          );
-
-          return;
-        }
-
-
-        /* WEEK COMPLETE */
-
-        if (data.weekly_complete) {
-
-          showMessage(
-            "🎉 پاداش هفتگی تمام شده است"
-          );
-
-          return;
-        }
-
-
-        /* SUCCESS */
-
-        if (
-          typeof data.reward ===
-          "number"
-        ) {
-
-          points =
-            Number(data.points) ||
-            points + data.reward;
-
-
-          document.getElementById(
-            "points"
-          ).innerText =
-            points.toLocaleString();
-
-
-          showMessage(
-            `🎉 روز ${data.day}: +${data.reward} امتیاز`
-          );
-
-        } else {
-
-          showMessage(
-            "🎉 درخواست با موفقیت انجام شد"
-          );
-        }
-
-      } catch (error) {
-
-        console.error(error);
-
-        showMessage(
-          "خطا در اتصال به سرور"
-        );
-      }
-    }
-
-
-    /* =========================
-       INVITE
-    ========================= */
-
-    function inviteFriend() {
-
-      let userId = "user";
-
-
-      if (
-        window.Telegram &&
-        window.Telegram.WebApp &&
-        window.Telegram.WebApp.initDataUnsafe &&
-        window.Telegram.WebApp.initDataUnsafe.user
-      ) {
-
-        userId =
-          window.Telegram.WebApp.initDataUnsafe.user.id;
-      }
-
-
-      const referralLink =
-        "https://t.me/Nexora_NexoBot?start=ref_" +
-        userId;
-
-
-      if (
-        window.Telegram &&
-        window.Telegram.WebApp
-      ) {
-
-        window.Telegram.WebApp.openTelegramLink(
-          "https://t.me/share/url?url=" +
-          encodeURIComponent(
-            referralLink
-          ) +
-          "&text=" +
-          encodeURIComponent(
-            "🚀 Join me on NEXORA and earn points!"
-          )
-        );
-
-      } else {
-
-        navigator.clipboard.writeText(
-          referralLink
-        );
-
-        showMessage(
-          "🔗 Referral link copied!"
-        );
-      }
-    }
-
-
-    /* =========================
-       MESSAGE
-    ========================= */
-
+    // Message
     function showMessage(text) {
 
       const message =
-        document.getElementById(
-          "message"
-        );
+        document.getElementById("message");
 
+      message.innerText = text;
+      message.style.display = "block";
 
-      message.innerText =
-        text;
+      setTimeout(() => {
+        message.style.display = "none";
+      }, 1800);
 
-
-      message.style.display =
-        "block";
-
-
-      setTimeout(function() {
-
-        message.style.display =
-          "none";
-
-      }, 2500);
     }
 
   </script>
