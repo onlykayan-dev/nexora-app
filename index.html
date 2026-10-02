@@ -635,314 +635,114 @@
        TAP
     ========================= */
 
-    async function tapForPoint(event) {
-
-      if (
-        remaining <= 0
-      ) {
-
-        return;
-
-      }
-
-
-      const circle =
-        document.getElementById(
-          "tapCircle"
-        );
-
-
-      /*
-       * جلوگیری از چند درخواست
-       * همزمان
-       */
-
-      if (
-        circle.dataset.loading ===
-        "true"
-      ) {
-
-        return;
-
-      }
-
-
-      circle.dataset.loading =
-        "true";
-
-
-      /*
-       * حذف فوکوس برای جلوگیری
-       * از مربع آبی
-       */
-
-      if (
-        document.activeElement
-      ) {
-
-        document.activeElement.blur();
-
-      }
-
-
-      try {
-
-        /* =====================
-           TELEGRAM USER
-        ===================== */
-
-        const telegramUser =
-          tg &&
-          tg.initDataUnsafe &&
-          tg.initDataUnsafe.user
-
-            ? tg.initDataUnsafe.user
-
-            : null;
-
-
-        if (
-          !telegramUser?.id
-        ) {
-
-          alert(
-            "Telegram user not detected."
-          );
-
-          return;
-
-        }
-
-
-        /* =====================
-           SERVER REQUEST
-        ===================== */
-
-        const response =
-          await fetch(
-            API_URL,
-            {
-
-              method: "POST",
-
-              headers: {
-                "Content-Type":
-                  "application/json"
-              },
-
-              body:
-                JSON.stringify({
-
-                  action:
-                    "tap",
-
-                  telegram_user:
-                    telegramUser
-
-                })
-
-            }
-          );
-
-
-        const data =
-          await response.json();
-
-
-        /* =====================
-           LIMIT REACHED
-        ===================== */
-
-        if (
-          response.status === 429 ||
-          data.error ===
-            "LIMIT_REACHED"
-        ) {
-
-          remaining =
-            0;
-
-
-          if (
-            data.resetAt
-          ) {
-
-            resetAt =
-              new Date(
-                data.resetAt
-              ).getTime();
-
-          }
-
-
-          saveLimit();
-
-          updateLimit();
-
-
-          alert(
-            "سهمیه ۱۰۰۰ درخواست شما تمام شده است."
-          );
-
-
-          return;
-
-        }
-
-
-        /* =====================
-           SERVER ERROR
-        ===================== */
-
-        if (
-          !response.ok ||
-          !data.success
-        ) {
-
-          alert(
-            "خطا در اتصال به سرور."
-          );
-
-          return;
-
-        }
-
-
-        /* =====================
-           UPDATE LIMIT
-        ===================== */
-
-        if (
-          typeof data.remaining ===
-          "number"
-        ) {
-
-          remaining =
-            data.remaining;
-
-        } else {
-
-          remaining--;
-
-        }
-
-
-        if (
-          data.resetAt
-        ) {
-
-          resetAt =
-            new Date(
-              data.resetAt
-            ).getTime();
-
-        }
-
-
-        /* =====================
-           GET POINTS FROM SERVER
-        ===================== */
-
-        if (
-          typeof data.points ===
-          "number"
-        ) {
-
-          points =
-            data.points;
-
-        }
-
-
-        /* =====================
-           SAVE POINTS
-        ===================== */
-
-        localStorage.setItem(
-          "nexo_points",
-          points
-        );
-
-
-        saveLimit();
-
-
-        /* =====================
-           UPDATE POINT DISPLAY
-        ===================== */
-
-        document.getElementById(
-          "points"
-        ).innerText =
-          points.toLocaleString();
-
-
-        updateLimit();
-
-
-        /* =====================
-           +1 ANIMATION
-        ===================== */
-
-        const plus =
-          document.createElement(
-            "div"
-          );
-
-
-        plus.className =
-          "plus-one";
-
-
-        plus.innerText =
-          "+1";
-
-
-        plus.style.left =
-          event.clientX +
-          "px";
-
-
-        plus.style.top =
-          event.clientY +
-          "px";
-
-
-        document.body.appendChild(
-          plus
-        );
-
-
-        setTimeout(
-          function () {
-
-            plus.remove();
-
-          },
-          800
-        );
-
-
-      } catch (error) {
-
-        console.error(
-          error
-        );
-
-
-        alert(
-          "خطا در اتصال به سرور."
-        );
-
-
-      } finally {
-
-        circle.dataset.loading =
-          "false";
-
-      }
-
+async function tapForPoint(event) {
+  const circle = document.getElementById("tapCircle");
+
+  if (circle.dataset.loading === "true") {
+    return;
+  }
+
+  if (remaining <= 0) {
+    alert("سهمیه ۱۰۰۰ درخواست شما تمام شده است.");
+    return;
+  }
+
+  circle.dataset.loading = "true";
+
+  try {
+    const telegramUser =
+      tg &&
+      tg.initDataUnsafe &&
+      tg.initDataUnsafe.user
+        ? tg.initDataUnsafe.user
+        : null;
+
+    if (!telegramUser?.id) {
+      alert("Telegram user not detected.");
+      return;
     }
+
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        action: "tap",
+        telegram_user: telegramUser
+      })
+    });
+
+    const data = await response.json();
+
+    console.log("NEXORA RESPONSE:", data);
+
+    if (response.status === 429) {
+      remaining = 0;
+
+      if (data.resetAt) {
+        resetAt = new Date(data.resetAt).getTime();
+      }
+
+      saveLimit();
+      updateLimit();
+
+      alert("سهمیه ۱۰۰۰ درخواست شما تمام شده است.");
+      return;
+    }
+
+    if (!response.ok || !data.success) {
+      alert(
+        "خطای سرور: " +
+        (data.error || "UNKNOWN_ERROR")
+      );
+      return;
+    }
+
+    if (typeof data.points === "number") {
+      points = data.points;
+    }
+
+    if (typeof data.remaining === "number") {
+      remaining = data.remaining;
+    }
+
+    if (data.resetAt) {
+      resetAt = new Date(data.resetAt).getTime();
+    }
+
+    localStorage.setItem(
+      "nexo_points",
+      String(points)
+    );
+
+    saveLimit();
+
+    document.getElementById("points").innerText =
+      points.toLocaleString();
+
+    updateLimit();
+
+    const plus = document.createElement("div");
+
+    plus.className = "plus-one";
+    plus.innerText = "+1";
+    plus.style.left = event.clientX + "px";
+    plus.style.top = event.clientY + "px";
+
+    document.body.appendChild(plus);
+
+    setTimeout(() => {
+      plus.remove();
+    }, 800);
+
+  } catch (error) {
+    console.error("NEXORA ERROR:", error);
+    alert("خطا در اتصال به سرور.");
+  } finally {
+    circle.dataset.loading = "false";
+  }
+}
 
   </script>
 
