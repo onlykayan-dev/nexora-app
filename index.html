@@ -1,10 +1,9 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>NEXORA</title>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -20,7 +19,12 @@
     body {
       min-height: 100vh;
       background:
-        radial-gradient(circle at top, #172b65 0%, #080b18 45%, #05060d 100%);
+        radial-gradient(
+          circle at top,
+          #172b65 0%,
+          #080b18 45%,
+          #05060d 100%
+        );
       color: white;
       display: flex;
       justify-content: center;
@@ -43,8 +47,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #00d9ff, #735cff, #d946ef);
-      box-shadow: 0 0 35px rgba(0, 210, 255, .35);
+      background:
+        linear-gradient(
+          135deg,
+          #00d9ff,
+          #735cff,
+          #d946ef
+        );
+      box-shadow:
+        0 0 35px rgba(0, 210, 255, .35);
       font-size: 48px;
       font-weight: 900;
       user-select: none;
@@ -77,7 +88,12 @@
     #points {
       font-size: 38px;
       font-weight: 900;
-      background: linear-gradient(90deg, #00e5ff, #a855f7);
+      background:
+        linear-gradient(
+          90deg,
+          #00e5ff,
+          #a855f7
+        );
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -214,6 +230,7 @@
           translateY(-100px)
           scale(1.4);
       }
+
     }
 
     .footer {
@@ -324,9 +341,12 @@
         ? window.Telegram.WebApp
         : null;
 
+
     if (tg) {
+
       tg.ready();
       tg.expand();
+
     }
 
 
@@ -347,12 +367,13 @@
         localStorage.getItem("nexo_points")
       ) || 0;
 
+
     document.getElementById("points").innerText =
       points.toLocaleString();
 
 
     /* =========================
-       LIMIT DISPLAY
+       LIMIT
     ========================= */
 
     const MAX_REQUESTS = 1000;
@@ -382,7 +403,10 @@
       remaining < 0 ||
       remaining > MAX_REQUESTS
     ) {
-      remaining = MAX_REQUESTS;
+
+      remaining =
+        MAX_REQUESTS;
+
     }
 
 
@@ -392,10 +416,12 @@
     ) {
 
       resetAt =
-        Date.now() + EIGHT_HOURS;
+        Date.now() +
+        EIGHT_HOURS;
 
       remaining =
         MAX_REQUESTS;
+
     }
 
 
@@ -410,18 +436,35 @@
         "nexo_reset_at",
         resetAt
       );
+
     }
 
 
     /* =========================
-       UPDATE LIMIT DISPLAY
+       UPDATE LIMIT
     ========================= */
 
     function updateLimit() {
 
-      document.getElementById(
-        "remaining"
-      ).innerText =
+      const remainingElement =
+        document.getElementById(
+          "remaining"
+        );
+
+
+      const timerElement =
+        document.getElementById(
+          "timer"
+        );
+
+
+      const circle =
+        document.getElementById(
+          "tapCircle"
+        );
+
+
+      remainingElement.innerText =
         remaining.toLocaleString();
 
 
@@ -454,23 +497,17 @@
         totalSeconds % 60;
 
 
-      document.getElementById(
-        "timer"
-      ).innerText =
+      timerElement.innerText =
 
         String(hours).padStart(2, "0")
-        + ":"
-        +
-        String(minutes).padStart(2, "0")
-        + ":"
-        +
-        String(seconds).padStart(2, "0");
 
+        + ":"
 
-      const circle =
-        document.getElementById(
-          "tapCircle"
-        );
+        + String(minutes).padStart(2, "0")
+
+        + ":"
+
+        + String(seconds).padStart(2, "0");
 
 
       if (remaining <= 0) {
@@ -494,7 +531,8 @@
           MAX_REQUESTS;
 
         resetAt =
-          Date.now() + EIGHT_HOURS;
+          Date.now() +
+          EIGHT_HOURS;
 
         saveLimit();
 
@@ -531,19 +569,18 @@
         );
 
 
-      /*
-        جلوگیری از چند درخواست
-        همزمان با کلیک سریع
-      */
-
       if (
-        circle.dataset.loading === "true"
+        circle.dataset.loading ===
+        "true"
       ) {
+
         return;
+
       }
 
 
-      circle.dataset.loading = "true";
+      circle.dataset.loading =
+        "true";
 
 
       try {
@@ -551,10 +588,13 @@
         /* TELEGRAM USER */
 
         const telegramUser =
+
           tg &&
           tg.initDataUnsafe &&
           tg.initDataUnsafe.user
+
             ? tg.initDataUnsafe.user
+
             : null;
 
 
@@ -565,6 +605,7 @@
           );
 
           return;
+
         }
 
 
@@ -574,19 +615,25 @@
           await fetch(
             API_URL,
             {
+
               method: "POST",
 
               headers: {
+
                 "Content-Type":
                   "application/json"
+
               },
 
-              body: JSON.stringify({
+              body:
+                JSON.stringify({
 
-                telegram_user:
-                  telegramUser
+                  action: "tap",
 
-              })
+                  telegram_user:
+                    telegramUser
+
+                })
 
             }
           );
@@ -600,7 +647,8 @@
 
         if (
           response.status === 429 ||
-          data.error === "LIMIT_REACHED"
+          data.error ===
+          "LIMIT_REACHED"
         ) {
 
           remaining = 0;
@@ -620,11 +668,14 @@
 
           updateLimit();
 
+
           alert(
             "سهمیه ۱۰۰۰ درخواست شما تمام شده است."
           );
 
+
           return;
+
         }
 
 
@@ -640,16 +691,15 @@
           );
 
           return;
+
         }
 
 
-        /* =====================
-           SERVER ACCEPTED TAP
-        ===================== */
-
+        /* SERVER ACCEPTED TAP */
 
         if (
-          typeof data.remaining === "number"
+          typeof data.remaining ===
+          "number"
         ) {
 
           remaining =
@@ -738,9 +788,11 @@
 
         console.error(error);
 
+
         alert(
           "خطا در اتصال به سرور."
         );
+
 
       } finally {
 
@@ -754,5 +806,5 @@
   </script>
 
 </body>
-
 </html>
+```
