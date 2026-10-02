@@ -1,262 +1,419 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>NEXORA</title>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      -webkit-tap-highlight-color: transparent;
+      font-family: Arial, sans-serif;
     }
 
     body {
       min-height: 100vh;
-      background: #080810;
+
+      background:
+        radial-gradient(
+          circle at top,
+          #172b65 0%,
+          #080b18 45%,
+          #05060d 100%
+        );
+
       color: white;
-      font-family: Arial, sans-serif;
+
       display: flex;
       justify-content: center;
+      align-items: center;
+
+      padding: 20px;
     }
 
     .app {
       width: 100%;
-      max-width: 480px;
-      min-height: 100vh;
-      padding: 25px 20px;
+      max-width: 500px;
+
       text-align: center;
     }
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    /* LOGO */
 
-    .logo-title {
-      font-size: 25px;
-      font-weight: 800;
-      letter-spacing: 2px;
-    }
+    .logo {
+      width: 90px;
+      height: 90px;
 
-    .profile {
-      width: 42px;
-      height: 42px;
+      margin: 0 auto 15px;
+
       border-radius: 50%;
-      border: 1px solid #44445c;
-      background: #151522;
-      color: white;
-      font-size: 20px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background:
+        linear-gradient(
+          135deg,
+          #00d9ff,
+          #735cff,
+          #d946ef
+        );
+
+      box-shadow:
+        0 0 35px
+        rgba(0, 210, 255, 0.35);
+
+      font-size: 48px;
+      font-weight: 900;
     }
+
+    .title {
+      font-size: 30px;
+
+      font-weight: 900;
+
+      letter-spacing: 4px;
+
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      color: #9da7c7;
+
+      font-size: 11px;
+
+      letter-spacing: 1px;
+
+      margin-bottom: 35px;
+    }
+
+    /* POINTS */
 
     .points-box {
-      margin-top: 45px;
-    }
-
-    .points {
-      font-size: 42px;
-      font-weight: 800;
+      margin-bottom: 30px;
     }
 
     .points-label {
-      margin-top: 5px;
-      color: #8b8b9d;
+      color: #9da7c7;
+
       font-size: 13px;
-      letter-spacing: 2px;
+
+      margin-bottom: 8px;
     }
 
-    .tap-container {
-      margin-top: 55px;
-      display: flex;
-      justify-content: center;
+    #points {
+      font-size: 38px;
+
+      font-weight: 900;
+
+      background:
+        linear-gradient(
+          90deg,
+          #00e5ff,
+          #a855f7
+        );
+
+      -webkit-background-clip: text;
+
+      -webkit-text-fill-color: transparent;
     }
+
+    /* TAP CIRCLE */
 
     .tap-circle {
-      width: 250px;
-      height: 250px;
-      border-radius: 50%;
-      background: radial-gradient(circle, #25234a, #11111d);
-      border: 5px solid #7467ff;
-      box-shadow:
-        0 0 25px rgba(116, 103, 255, 0.45),
-        0 0 70px rgba(116, 103, 255, 0.15);
+      width: 220px;
+      height: 220px;
 
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      margin: 0 auto;
+
+      border-radius: 50%;
+
+      background:
+        conic-gradient(
+          #00d9ff,
+          #735cff,
+          #d946ef,
+          #00d9ff
+        );
+
+      padding: 7px;
 
       cursor: pointer;
-      user-select: none;
 
-      transition: transform 0.08s;
+      box-shadow:
+        0 0 30px
+        rgba(0, 217, 255, 0.30),
+
+        0 0 70px
+        rgba(115, 92, 255, 0.18);
+
+      transition:
+        transform 0.08s ease;
     }
 
     .tap-circle:active {
-      transform: scale(0.92);
+      transform: scale(0.94);
     }
 
-    .nexora-logo {
-      font-size: 31px;
-      font-weight: 900;
-      letter-spacing: 3px;
+    .tap-inner {
+      width: 100%;
+      height: 100%;
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          #151d3b,
+          #080b18
+        );
+
+      display: flex;
+
+      flex-direction: column;
+
+      align-items: center;
+
+      justify-content: center;
+
+      user-select: none;
+    }
+
+    .tap-icon {
+      font-size: 45px;
+
+      margin-bottom: 8px;
     }
 
     .tap-text {
-      margin-top: 28px;
-      color: #8b8b9d;
-      font-size: 15px;
+      font-size: 19px;
+
+      font-weight: 900;
+
       letter-spacing: 2px;
     }
 
-    .menu {
-      margin-top: 55px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+    .tap-hint {
+      margin-top: 7px;
+
+      color: #7f89a8;
+
+      font-size: 11px;
     }
 
-    .menu button {
-      padding: 14px 5px;
-      border: 1px solid #28283b;
-      border-radius: 14px;
-      background: #11111b;
-      color: white;
-      font-size: 12px;
-    }
+    /* +1 ANIMATION */
 
-    .menu button:active {
-      transform: scale(0.96);
-    }
-
-    .message {
+    .plus-one {
       position: fixed;
-      left: 50%;
-      bottom: 30px;
-      transform: translateX(-50%);
-      background: #20202d;
-      border: 1px solid #38384d;
-      padding: 10px 18px;
-      border-radius: 12px;
-      display: none;
-      white-space: nowrap;
+
+      pointer-events: none;
+
+      font-size: 28px;
+
+      font-weight: 900;
+
+      color: #00e5ff;
+
+      animation:
+        plusOne 0.8s ease-out
+        forwards;
+
+      z-index: 999;
     }
+
+    @keyframes plusOne {
+
+      0% {
+        opacity: 1;
+
+        transform:
+          translateY(0)
+          scale(1);
+      }
+
+      100% {
+        opacity: 0;
+
+        transform:
+          translateY(-100px)
+          scale(1.4);
+      }
+
+    }
+
+    .footer {
+      margin-top: 35px;
+
+      color: #626b88;
+
+      font-size: 10px;
+    }
+
   </style>
+
 </head>
 
 <body>
 
   <div class="app">
 
-    <div class="header">
-      <div class="logo-title">NEXORA</div>
+    <!-- LOGO -->
 
-      <button class="profile">
-        👤
-      </button>
+    <div class="logo">
+      N
     </div>
+
+    <div class="title">
+      NEXORA
+    </div>
+
+    <div class="subtitle">
+      EARN • TAP • RISE
+    </div>
+
+
+    <!-- POINTS -->
 
     <div class="points-box">
-      <div class="points" id="points">0</div>
 
       <div class="points-label">
-        NEXO POINTS
+        YOUR NEXO POINTS
       </div>
+
+      <div id="points">
+        0
+      </div>
+
     </div>
 
-    <div class="tap-container">
 
-      <div class="tap-circle" onclick="tapEarn()">
+    <!-- TAP CIRCLE -->
 
-        <div class="nexora-logo">
-          NEXORA
+    <div
+      class="tap-circle"
+      onclick="tapForPoint(event)"
+    >
+
+      <div class="tap-inner">
+
+        <div class="tap-icon">
+          ⚡
+        </div>
+
+        <div class="tap-text">
+          TAP
+        </div>
+
+        <div class="tap-hint">
+          +1 POINT
         </div>
 
       </div>
 
     </div>
 
-    <div class="tap-text">
-      TAP TO EARN +1
-    </div>
 
-    <div class="menu">
-
-      <button onclick="showMessage('Tasks coming soon')">
-        📋 Tasks
-      </button>
-
-      <button onclick="showMessage('Referral coming soon')">
-        👥 Referral
-      </button>
-
-      <button onclick="showMessage('Ranking coming soon')">
-        🏆 Ranking
-      </button>
-
+    <div class="footer">
+      NEXORA © 2026
     </div>
 
   </div>
 
-  <div class="message" id="message"></div>
 
   <script>
 
-    // Telegram Mini App
-    if (window.Telegram && window.Telegram.WebApp) {
-      Telegram.WebApp.ready();
-      Telegram.WebApp.expand();
+    /* TELEGRAM */
+
+    if (
+      window.Telegram &&
+      window.Telegram.WebApp
+    ) {
+
+      window.Telegram.WebApp.ready();
+
+      window.Telegram.WebApp.expand();
+
     }
 
-    // Load saved points
-    let points = Number(
-      localStorage.getItem("nexora_points") || 0
-    );
 
-    updatePoints();
+    /* LOAD POINTS */
+
+    let points =
+      Number(
+        localStorage.getItem(
+          "nexo_points"
+        )
+      ) || 0;
 
 
-    // Tap to Earn
-    function tapEarn() {
+    document.getElementById(
+      "points"
+    ).innerText =
+      points.toLocaleString();
+
+
+    /* TAP */
+
+    function tapForPoint(event) {
 
       points += 1;
 
+
       localStorage.setItem(
-        "nexora_points",
+        "nexo_points",
         points
       );
 
-      updatePoints();
 
-    }
-
-
-    // Update points on screen
-    function updatePoints() {
-
-      document.getElementById("points").innerText =
+      document.getElementById(
+        "points"
+      ).innerText =
         points.toLocaleString();
 
-    }
+
+      /* +1 ANIMATION */
+
+      const plus =
+        document.createElement(
+          "div"
+        );
+
+      plus.className =
+        "plus-one";
+
+      plus.innerText =
+        "+1";
 
 
-    // Message
-    function showMessage(text) {
+      plus.style.left =
+        event.clientX + "px";
 
-      const message =
-        document.getElementById("message");
+      plus.style.top =
+        event.clientY + "px";
 
-      message.innerText = text;
-      message.style.display = "block";
 
-      setTimeout(() => {
-        message.style.display = "none";
-      }, 1800);
+      document.body.appendChild(
+        plus
+      );
+
+
+      setTimeout(
+        function() {
+          plus.remove();
+        },
+        800
+      );
 
     }
 
@@ -264,3 +421,4 @@
 
 </body>
 </html>
+```
