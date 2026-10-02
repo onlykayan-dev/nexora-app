@@ -3,11 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>NEXORA</title>
 
@@ -16,970 +12,609 @@
   <style>
     * {
       box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    html,
-    body {
       margin: 0;
       padding: 0;
-      width: 100%;
-      min-height: 100%;
-      background: #050711;
-      color: #ffffff;
-      font-family: Arial, Helvetica, sans-serif;
-      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
       min-height: 100vh;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      width: 380px;
-      height: 380px;
-      top: -170px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(78, 110, 255, 0.20);
-      filter: blur(95px);
-      border-radius: 50%;
-      pointer-events: none;
+      background: #080810;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
     }
 
     .app {
       width: 100%;
       max-width: 480px;
       min-height: 100vh;
-      margin: 0 auto;
-      padding: 22px 17px 35px;
-      position: relative;
-      z-index: 1;
+      padding: 25px 20px;
+      text-align: center;
     }
-
-    /* =========================
-       HEADER
-    ========================= */
 
     .header {
-      text-align: center;
-      padding-top: 8px;
-      margin-bottom: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .logo {
-      font-size: 36px;
-      font-weight: 900;
-      letter-spacing: 7px;
-
-      background:
-        linear-gradient(
-          90deg,
-          #ffffff,
-          #a9c1ff,
-          #6f91ff
-        );
-
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-
-      text-shadow:
-        0 0 25px rgba(100,140,255,0.15);
-    }
-
-    .brand-line {
-      width: 45px;
-      height: 3px;
-      margin: 9px auto 0;
-
-      border-radius: 10px;
-
-      background:
-        linear-gradient(
-          90deg,
-          #5d7dff,
-          #9eb5ff
-        );
-
-      box-shadow:
-        0 0 12px rgba(90,120,255,0.5);
-    }
-
-    .subtitle {
-      margin-top: 9px;
-      color: #69758d;
-      font-size: 10px;
-      letter-spacing: 3px;
-    }
-
-    /* =========================
-       BALANCE
-    ========================= */
-
-    .balance-card {
-      position: relative;
-      overflow: hidden;
-
-      width: 100%;
-      padding: 25px 20px;
-
-      border-radius: 27px;
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(29, 40, 69, 0.98),
-          rgba(9, 13, 25, 0.98)
-        );
-
-      border: 1px solid rgba(130,160,235,0.17);
-
-      box-shadow:
-        0 20px 50px rgba(0,0,0,0.40),
-        inset 0 1px 0 rgba(255,255,255,0.05);
-    }
-
-    .balance-card::before {
-      content: "";
-
-      position: absolute;
-
-      width: 170px;
-      height: 170px;
-
-      left: -80px;
-      top: -90px;
-
-      border-radius: 50%;
-
-      background:
-        rgba(75,110,255,0.13);
-
-      filter: blur(35px);
-
-      pointer-events: none;
-    }
-
-    .balance-label {
-      position: relative;
-      z-index: 1;
-
-      text-align: center;
-
-      color: #8290aa;
-      font-size: 12px;
-
-      margin-bottom: 11px;
-    }
-
-    .points {
-      position: relative;
-      z-index: 1;
-
-      text-align: center;
-
-      font-size: 50px;
-      line-height: 1;
-
-      font-weight: 900;
-
-      background:
-        linear-gradient(
-          180deg,
-          #ffffff,
-          #a9c1ff
-        );
-
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .points-unit {
-      position: relative;
-      z-index: 1;
-
-      text-align: center;
-
-      margin-top: 9px;
-
-      color: #5c6981;
-      font-size: 10px;
+    .logo-title {
+      font-size: 25px;
+      font-weight: 800;
       letter-spacing: 2px;
     }
 
-    /* =========================
-       TAP AREA
-    ========================= */
-
-    .tap-section {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      margin: 39px 0 33px;
-    }
-
-    .tap-ring {
-      width: 252px;
-      height: 252px;
-
+    .profile {
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      background:
-        radial-gradient(
-          circle,
-          rgba(70,110,230,0.17),
-          rgba(20,30,55,0.07) 52%,
-          transparent 70%
-        );
-
-      box-shadow:
-        0 0 0 1px rgba(90,130,230,0.14),
-        0 0 65px rgba(60,100,230,0.15);
+      border: 1px solid #44445c;
+      background: #151522;
+      color: white;
+      font-size: 20px;
     }
 
-    .tap-btn {
-      width: 196px;
-      height: 196px;
-
-      border-radius: 50%;
-
-      border: 1px solid rgba(170,195,255,0.34);
-
-      background:
-        radial-gradient(
-          circle at 34% 22%,
-          #5c7fc5 0%,
-          #304f8a 32%,
-          #1b2e53 65%,
-          #0b152a 100%
-        );
-
-      color: #ffffff;
-
-      font-size: 31px;
-      font-weight: 900;
-
-      letter-spacing: 5px;
-
-      cursor: pointer;
-      user-select: none;
-
-      outline: none;
-
-      touch-action: manipulation;
-
-      box-shadow:
-        0 18px 43px rgba(0,0,0,0.58),
-        0 0 42px rgba(70,110,220,0.27),
-        inset 0 3px 14px rgba(255,255,255,0.15),
-        inset 0 -13px 21px rgba(0,0,0,0.34);
-
-      transition:
-        transform 0.06s ease,
-        filter 0.08s ease;
+    .points-box {
+      margin-top: 45px;
     }
 
-    .tap-btn:active {
-      transform: scale(0.90);
-      filter: brightness(1.18);
-    }
-
-    .tap-btn.disabled {
-      opacity: 0.42;
-      cursor: not-allowed;
-    }
-
-    .tap-hint {
-      margin-top: 14px;
-
-      color: #59657c;
-      font-size: 11px;
-    }
-
-    /* =========================
-       QUEUE
-    ========================= */
-
-    .queue {
-      min-height: 16px;
-
-      margin-top: 7px;
-
-      color: #8197c4;
-
-      font-size: 10px;
-
-      opacity: 0;
-
-      transition: opacity 0.15s ease;
-    }
-
-    .queue.visible {
-      opacity: 1;
-    }
-
-    /* =========================
-       STATS
-    ========================= */
-
-    .stats {
-      display: grid;
-
-      grid-template-columns:
-        1fr 1fr;
-
-      gap: 12px;
-
-      width: 100%;
-    }
-
-    .stat-card {
-      padding: 18px 15px;
-
-      border-radius: 20px;
-
-      background:
-        rgba(14,20,34,0.93);
-
-      border:
-        1px solid rgba(110,135,190,0.14);
-
-      box-shadow:
-        0 10px 28px rgba(0,0,0,0.23);
-    }
-
-    .stat-title {
-      color: #69768d;
-
-      font-size: 10px;
-
-      margin-bottom: 8px;
-    }
-
-    .stat-value {
-      color: #bfd1f4;
-
-      font-size: 19px;
-
+    .points {
+      font-size: 42px;
       font-weight: 800;
     }
 
-    .timer {
-      direction: ltr;
-      text-align: right;
+    .points-label {
+      margin-top: 5px;
+      color: #8b8b9d;
+      font-size: 13px;
+      letter-spacing: 2px;
     }
 
-    /* =========================
-       ERROR
-    ========================= */
-
-    .error-box {
-      width: 100%;
-
-      margin-top: 14px;
-
-      padding: 12px;
-
-      border-radius: 14px;
-
-      background:
-        rgba(90,25,35,0.45);
-
-      border:
-        1px solid rgba(220,75,95,0.25);
-
-      color: #ff9eaa;
-
-      font-size: 11px;
-
-      text-align: center;
-
-      display: none;
-
-      word-break: break-word;
+    .tap-container {
+      margin-top: 55px;
+      display: flex;
+      justify-content: center;
     }
 
-    /* =========================
-       +1 EFFECT
-    ========================= */
+    .tap-circle {
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #25234a, #11111d);
+      border: 5px solid #7467ff;
+      box-shadow:
+        0 0 25px rgba(116, 103, 255, 0.45),
+        0 0 70px rgba(116, 103, 255, 0.15);
 
-    .tap-effect {
-      position: fixed;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-      pointer-events: none;
+      cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
 
-      z-index: 9999;
+      transition: transform 0.08s;
+    }
 
-      color: #b3caff;
+    .tap-circle:active {
+      transform: scale(0.92);
+    }
 
-      font-size: 26px;
-
+    .nexora-logo {
+      font-size: 31px;
       font-weight: 900;
-
-      text-shadow:
-        0 0 15px rgba(100,150,255,0.8);
-
-      animation:
-        floatUp 0.55s ease-out forwards;
+      letter-spacing: 3px;
     }
 
-    @keyframes floatUp {
-
-      0% {
-        opacity: 1;
-
-        transform:
-          translate(-50%, 0)
-          scale(1);
-      }
-
-      100% {
-        opacity: 0;
-
-        transform:
-          translate(-50%, -75px)
-          scale(1.35);
-      }
-
+    .tap-text {
+      margin-top: 28px;
+      color: #8b8b9d;
+      font-size: 15px;
+      letter-spacing: 2px;
     }
 
-    /* =========================
-       MOBILE
-    ========================= */
+    .menu {
+      margin-top: 55px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
 
-    @media (max-width: 360px) {
+    .menu button {
+      padding: 14px 5px;
+      border: 1px solid #28283b;
+      border-radius: 14px;
+      background: #11111b;
+      color: white;
+      font-size: 12px;
+      cursor: pointer;
+    }
 
-      .app {
-        padding-left: 14px;
-        padding-right: 14px;
-      }
+    .menu button:active {
+      transform: scale(0.96);
+    }
 
-      .tap-ring {
-        width: 220px;
-        height: 220px;
-      }
+    .message {
+      position: fixed;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      background: #20202d;
+      border: 1px solid #38384d;
+      padding: 10px 18px;
+      border-radius: 12px;
+      display: none;
+      white-space: nowrap;
+      z-index: 100;
+    }
 
-      .tap-btn {
-        width: 172px;
-        height: 172px;
-      }
-
-      .points {
-        font-size: 43px;
-      }
-
-      .logo {
-        font-size: 32px;
-      }
+    .queue {
+      margin-top: 8px;
+      color: #7467ff;
+      font-size: 12px;
+      min-height: 16px;
     }
   </style>
 </head>
 
 <body>
 
-  <main class="app">
+  <div class="app">
 
-    <header class="header">
+    <div class="header">
+      <div class="logo-title">NEXORA</div>
 
-      <div class="logo">
-        NEXORA
+      <button class="profile" type="button">
+        👤
+      </button>
+    </div>
+
+    <div class="points-box">
+      <div class="points" id="points">0</div>
+
+      <div class="points-label">
+        NEXO POINTS
       </div>
+    </div>
 
-      <div class="brand-line"></div>
-
-      <div class="subtitle">
-        TAP • EARN • BUILD
-      </div>
-
-    </header>
-
-
-    <section class="balance-card">
-
-      <div class="balance-label">
-        Your Balance
-      </div>
+    <div class="tap-container">
 
       <div
-        class="points"
-        id="points"
+        class="tap-circle"
+        id="tapButton"
+        role="button"
+        aria-label="Tap to earn"
       >
-        0
-      </div>
-
-      <div class="points-unit">
-        NEXORA POINTS
-      </div>
-
-    </section>
-
-
-    <section class="tap-section">
-
-      <div class="tap-ring">
-
-        <button
-          id="tapBtn"
-          class="tap-btn"
-          type="button"
-        >
-          TAP
-        </button>
-
-      </div>
-
-      <div class="tap-hint">
-        Tap to earn points
-      </div>
-
-      <div
-        id="queue"
-        class="queue"
-      ></div>
-
-    </section>
-
-
-    <section class="stats">
-
-      <div class="stat-card">
-
-        <div class="stat-title">
-          Taps Remaining
+        <div class="nexora-logo">
+          NEXORA
         </div>
-
-        <div
-          class="stat-value"
-          id="remaining"
-        >
-          1000
-        </div>
-
       </div>
 
+    </div>
 
-      <div class="stat-card">
+    <div class="tap-text">
+      TAP TO EARN +1
+    </div>
 
-        <div class="stat-title">
-          Reset In
-        </div>
+    <div class="queue" id="queue"></div>
 
-        <div
-          class="stat-value timer"
-          id="timer"
-        >
-          08:00:00
-        </div>
+    <div class="menu">
 
-      </div>
+      <button type="button" onclick="showMessage('Tasks coming soon')">
+        📋 Tasks
+      </button>
 
-    </section>
+      <button type="button" onclick="showMessage('Referral coming soon')">
+        👥 Referral
+      </button>
 
+      <button type="button" onclick="showMessage('Ranking coming soon')">
+        🏆 Ranking
+      </button>
 
-    <div
-      id="errorBox"
-      class="error-box"
-    ></div>
+    </div>
 
-  </main>
+  </div>
 
+  <div class="message" id="message"></div>
 
   <script>
-
-    // ==========================================
-    // TELEGRAM
-    // ==========================================
-
-    const tg =
-      window.Telegram &&
-      window.Telegram.WebApp
-        ? window.Telegram.WebApp
-        : null;
-
-
-    if (tg) {
-      tg.ready();
-      tg.expand();
-    }
-
-
-    // ==========================================
-    // SUPABASE
-    // ==========================================
+    // ==============================
+    // NEXORA CONFIG
+    // ==============================
 
     const API_URL =
       "https://zpejsrxapxozwpeyvfbw.supabase.co/functions/v1/super-action";
 
-
-    // ==========================================
-    // SETTINGS
-    // ==========================================
-
     const MAX_REQUESTS = 1000;
-
-    const EIGHT_HOURS =
-      8 * 60 * 60 * 1000;
+    const WINDOW_MS = 8 * 60 * 60 * 1000;
 
 
-    // ==========================================
-    // ELEMENTS
-    // ==========================================
-
-    const tapBtn =
-      document.getElementById("tapBtn");
-
-    const pointsEl =
-      document.getElementById("points");
-
-    const remainingEl =
-      document.getElementById("remaining");
-
-    const timerEl =
-      document.getElementById("timer");
-
-    const errorBox =
-      document.getElementById("errorBox");
-
-    const queueEl =
-      document.getElementById("queue");
-
-
-    // ==========================================
-    // DATA
-    // ==========================================
-
-    let points =
-      Number(
-        localStorage.getItem("nexo_points")
-      ) || 0;
-
-
-    let remaining =
-      Number(
-        localStorage.getItem("nexo_remaining")
-      );
-
-
-    if (!Number.isFinite(remaining)) {
-      remaining = MAX_REQUESTS;
-    }
-
-
-    let resetAt =
-      Number(
-        localStorage.getItem("nexo_reset_at")
-      ) || 0;
-
-
-    // ==========================================
-    // TELEGRAM USER
-    // ==========================================
+    // ==============================
+    // TELEGRAM
+    // ==============================
 
     let telegramUser = null;
 
+    if (window.Telegram && window.Telegram.WebApp) {
+      Telegram.WebApp.ready();
+      Telegram.WebApp.expand();
 
-    if (
-      tg &&
-      tg.initDataUnsafe &&
-      tg.initDataUnsafe.user
-    ) {
+      if (Telegram.WebApp.initDataUnsafe &&
+          Telegram.WebApp.initDataUnsafe.user) {
 
-      telegramUser =
-        tg.initDataUnsafe.user;
-
-    } else {
-
-      telegramUser = {
-        id: "test_user"
-      };
-
+        telegramUser = Telegram.WebApp.initDataUnsafe.user;
+      }
     }
 
 
-    // ==========================================
+    // ==============================
+    // LOCAL DATA
+    // ==============================
+
+    let points = Number(
+      localStorage.getItem("nexora_points") || 0
+    );
+
+    let remaining = Number(
+      localStorage.getItem("nexora_remaining") || MAX_REQUESTS
+    );
+
+    let resetAt = Number(
+      localStorage.getItem("nexora_resetAt") || 0
+    );
+
+
+    // ==============================
     // TAP QUEUE
-    // ==========================================
+    // ==============================
 
     let tapQueue = 0;
-
     let processing = false;
 
 
-    // ==========================================
-    // UPDATE UI
-    // ==========================================
+    // ==============================
+    // INITIALIZE
+    // ==============================
 
-    function updateUI() {
-
-      pointsEl.textContent =
-        points.toLocaleString("en-US");
-
-
-      remainingEl.textContent =
-        Math.max(
-          0,
-          remaining
-        ).toLocaleString("en-US");
+    checkLimit();
+    updatePoints();
+    updateQueue();
 
 
-      updateQueueUI();
+    // ==============================
+    // TAP BUTTON
+    // ==============================
 
+    document
+      .getElementById("tapButton")
+      .addEventListener("click", tapEarn);
+
+
+    function tapEarn() {
+
+      if (remaining <= 0) {
+        showMessage("Limit reached. Try again later.");
+        return;
+      }
+
+      tapQueue++;
+
+      updateQueue();
+
+      processQueue();
     }
 
 
-    function updateQueueUI() {
+    // ==============================
+    // PROCESS TAP QUEUE
+    // ==============================
+
+    async function processQueue() {
+
+      if (processing) {
+        return;
+      }
+
+      if (tapQueue <= 0) {
+        return;
+      }
+
+      processing = true;
+
+      while (tapQueue > 0 && remaining > 0) {
+
+        tapQueue--;
+
+        updateQueue();
+
+        const success = await sendTap();
+
+        if (!success) {
+          // Put failed tap back into queue
+          tapQueue++;
+
+          updateQueue();
+
+          break;
+        }
+      }
+
+      processing = false;
+    }
+
+
+    // ==============================
+    // SEND TAP TO SUPABASE
+    // ==============================
+
+    async function sendTap() {
+
+      try {
+
+        if (!telegramUser) {
+          showMessage("Open NEXORA inside Telegram.");
+          return false;
+        }
+
+        const response = await fetch(API_URL, {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+            action: "tap",
+            telegram_user: telegramUser
+          })
+        });
+
+
+        let data = null;
+
+        try {
+          data = await response.json();
+        } catch (e) {
+          throw new Error("Invalid server response");
+        }
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            data && data.error
+              ? data.error
+              : "Server error " + response.status
+          );
+        }
+
+
+        if (!data || data.success !== true) {
+
+          throw new Error(
+            data && data.error
+              ? data.error
+              : "Tap failed"
+          );
+        }
+
+
+        // ==========================
+        // SERVER RESULT
+        // ==========================
+
+        const added = Number(data.added || 0);
+        const serverPoints = Number(data.points || 0);
+
+        if (added > 0) {
+
+          points += added;
+
+        } else if (serverPoints > 0) {
+
+          // Fallback if server returns points
+          points += serverPoints;
+        }
+
+
+        if (typeof data.remaining === "number") {
+          remaining = data.remaining;
+        } else {
+          remaining = Math.max(0, remaining - 1);
+        }
+
+
+        if (data.resetAt) {
+
+          const serverReset =
+            new Date(data.resetAt).getTime();
+
+          if (!Number.isNaN(serverReset)) {
+            resetAt = serverReset;
+          }
+        }
+
+
+        // ==========================
+        // SAVE
+        // ==========================
+
+        localStorage.setItem(
+          "nexora_points",
+          String(points)
+        );
+
+        localStorage.setItem(
+          "nexora_remaining",
+          String(remaining)
+        );
+
+        localStorage.setItem(
+          "nexora_resetAt",
+          String(resetAt)
+        );
+
+
+        updatePoints();
+        updateQueue();
+
+        showPlusOne();
+
+        return true;
+
+      } catch (error) {
+
+        console.error("NEXORA TAP ERROR:", error);
+
+        showMessage(
+          error.message || "Connection error"
+        );
+
+        return false;
+      }
+    }
+
+
+    // ==============================
+    // LIMIT CHECK
+    // ==============================
+
+    function checkLimit() {
+
+      if (!resetAt) {
+        remaining = MAX_REQUESTS;
+        return;
+      }
+
+      if (Date.now() >= resetAt) {
+
+        remaining = MAX_REQUESTS;
+        resetAt = 0;
+
+        localStorage.setItem(
+          "nexora_remaining",
+          String(remaining)
+        );
+
+        localStorage.setItem(
+          "nexora_resetAt",
+          "0"
+        );
+      }
+    }
+
+
+    // ==============================
+    // UPDATE POINTS
+    // ==============================
+
+    function updatePoints() {
+
+      document.getElementById("points").innerText =
+        points.toLocaleString();
+    }
+
+
+    // ==============================
+    // QUEUE DISPLAY
+    // ==============================
+
+    function updateQueue() {
+
+      const queue =
+        document.getElementById("queue");
 
       if (tapQueue > 0) {
 
-        queueEl.textContent =
-          "Sending " +
-          tapQueue.toLocaleString("en-US") +
-          " taps...";
-
-        queueEl.classList.add(
-          "visible"
-        );
+        queue.innerText =
+          "Processing " + tapQueue + "...";
 
       } else {
 
-        queueEl.textContent = "";
-
-        queueEl.classList.remove(
-          "visible"
-        );
-
+        queue.innerText = "";
       }
-
     }
 
 
-    // ==========================================
-    // TIMER
-    // ==========================================
+    // ==============================
+    // +1 EFFECT
+    // ==============================
 
-    function updateTimer() {
-
-      if (!resetAt) {
-
-        timerEl.textContent =
-          "08:00:00";
-
-        return;
-      }
-
-
-      const diff =
-        resetAt - Date.now();
-
-
-      if (diff <= 0) {
-
-        remaining =
-          MAX_REQUESTS;
-
-
-        localStorage.setItem(
-          "nexo_remaining",
-          String(MAX_REQUESTS)
-        );
-
-
-        localStorage.removeItem(
-          "nexo_reset_at"
-        );
-
-
-        resetAt = 0;
-
-
-        tapBtn.classList.remove(
-          "disabled"
-        );
-
-
-        updateUI();
-
-
-        timerEl.textContent =
-          "08:00:00";
-
-
-        return;
-      }
-
-
-      const totalSeconds =
-        Math.floor(
-          diff / 1000
-        );
-
-
-      const hours =
-        Math.floor(
-          totalSeconds / 3600
-        );
-
-
-      const minutes =
-        Math.floor(
-          (totalSeconds % 3600) / 60
-        );
-
-
-      const seconds =
-        totalSeconds % 60;
-
-
-      timerEl.textContent =
-        String(hours).padStart(2, "0") +
-        ":" +
-        String(minutes).padStart(2, "0") +
-        ":" +
-        String(seconds).padStart(2, "0");
-
-    }
-
-
-    // ==========================================
-    // ERROR
-    // ==========================================
-
-    function showError(message) {
-
-      errorBox.style.display =
-        "block";
-
-      errorBox.textContent =
-        message;
-
-    }
-
-
-    function clearError() {
-
-      errorBox.style.display =
-        "none";
-
-      errorBox.textContent =
-        "";
-
-    }
-
-
-    // ==========================================
-    // TAP EFFECT
-    // ==========================================
-
-    function showTapEffect() {
+    function showPlusOne() {
 
       const effect =
         document.createElement("div");
 
+      effect.innerText = "+1";
 
-      effect.className =
-        "tap-effect";
+      effect.style.position = "fixed";
+      effect.style.left = "50%";
+      effect.style.top = "45%";
+      effect.style.transform = "translate(-50%, -50%)";
+      effect.style.fontSize = "28px";
+      effect.style.fontWeight = "900";
+      effect.style.color = "#7467ff";
+      effect.style.pointerEvents = "none";
+      effect.style.zIndex = "9999";
+      effect.style.transition =
+        "all 0.6s ease";
 
+      document.body.appendChild(effect);
 
-      effect.textContent =
-        "+1";
+      requestAnimationFrame(() => {
 
+        effect.style.top = "35%";
+        effect.style.opacity = "0";
 
-      const rect =
-        tapBtn.getBoundingClientRect();
+      });
 
-
-      effect.style.left =
-        (
-          rect.left +
-          rect.width / 2
-        ) + "px";
-
-
-      effect.style.top =
-        (
-          rect.top + 15
-        ) + "px";
-
-
-      document.body.appendChild(
-        effect
-      );
-
-
-      setTimeout(
-        () => effect.remove(),
-        600
-      );
-
+      setTimeout(() => {
+        effect.remove();
+      }, 650);
     }
 
 
-    // ==========================================
-    // SEND ONE TAP
-    // ==========================================
+    // ==============================
+    // MESSAGE
+    // ==============================
 
-    async function sendOneTap() {
+    function showMessage(text) {
 
-      const response =
-        await fetch(
-          API_URL,
-          {
-            method: "POST",
+      const message =
+        document.getElementById("message");
 
-            headers: {
-              "Content-Type":
-                "application/json"
-            },
+      message.innerText = text;
+      message.style.display = "block";
 
-            body: JSON.stringify({
-
-              action: "tap",
-
-              telegram_user:
-                telegramUser
-
-            })
-
-          }
-        );
-
-
-      const rawText =
-        await response.text();
-
-
-      console.log(
-        "SERVER STATUS:",
-        response.status
+      clearTimeout(
+        window.nexoraMessageTimer
       );
 
+      window.nexoraMessageTimer =
+        setTimeout(() => {
 
-      console.log(
-        "SERVER RESPONSE:",
-        rawText
-      );
+          message.style.display = "none";
+
+        }, 1800);
+    }
 
 
-      let data;
+    // ==============================
+    // PERIODIC LIMIT CHECK
+    // ==============================
 
+    setInterval(() => {
 
-      try {
+      checkLimit();
 
-        data =
-          JSON.parse(rawText);
+    }, 1000);
 
-      } catch {
+  </script>
 
-        throw new Error(
-          "Invalid server response: " +
-          rawText
-        );
-
-     
+</body>
+</html>
+```
