@@ -1,18 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>NEXORA</title>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
-
     * {
       box-sizing: border-box;
       margin: 0;
@@ -22,22 +19,14 @@
 
     body {
       min-height: 100vh;
-
       background:
-        radial-gradient(
-          circle at top,
-          #172b65 0%,
-          #080b18 45%,
-          #05060d 100%
-        );
-
+        radial-gradient(circle at top, #172b65 0%, #080b18 45%, #05060d 100%);
       color: white;
-
       display: flex;
       justify-content: center;
       align-items: center;
-
       padding: 20px;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .app {
@@ -49,29 +38,16 @@
     .logo {
       width: 90px;
       height: 90px;
-
       margin: 0 auto 15px;
-
       border-radius: 50%;
-
       display: flex;
       align-items: center;
       justify-content: center;
-
-      background:
-        linear-gradient(
-          135deg,
-          #00d9ff,
-          #735cff,
-          #d946ef
-        );
-
-      box-shadow:
-        0 0 35px
-        rgba(0, 210, 255, 0.35);
-
+      background: linear-gradient(135deg, #00d9ff, #735cff, #d946ef);
+      box-shadow: 0 0 35px rgba(0, 210, 255, .35);
       font-size: 48px;
       font-weight: 900;
+      user-select: none;
     }
 
     .title {
@@ -101,19 +77,10 @@
     #points {
       font-size: 38px;
       font-weight: 900;
-
-      background:
-        linear-gradient(
-          90deg,
-          #00e5ff,
-          #a855f7
-        );
-
+      background: linear-gradient(90deg, #00e5ff, #a855f7);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-
-    /* LIMIT */
 
     .limit-info {
       margin-bottom: 18px;
@@ -139,7 +106,6 @@
     .tap-circle {
       width: 220px;
       height: 220px;
-
       margin: 0 auto;
 
       border-radius: 50%;
@@ -157,23 +123,31 @@
       cursor: pointer;
 
       box-shadow:
-        0 0 30px
-        rgba(0, 217, 255, 0.30),
+        0 0 30px rgba(0, 217, 255, .30),
+        0 0 70px rgba(115, 92, 255, .18);
 
-        0 0 70px
-        rgba(115, 92, 255, 0.18);
+      transition: transform .08s ease;
 
-      transition:
-        transform 0.08s ease;
+      /* حذف مربع/هایلایت آبی */
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+      border: none;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     .tap-circle:active {
-      transform: scale(0.94);
+      transform: scale(.94);
+    }
+
+    .tap-circle:focus,
+    .tap-circle:focus-visible {
+      outline: none;
     }
 
     .tap-circle.disabled {
-      filter: grayscale(0.8);
-      opacity: 0.55;
+      filter: grayscale(.8);
+      opacity: .55;
       cursor: not-allowed;
     }
 
@@ -191,14 +165,13 @@
         );
 
       display: flex;
-
       flex-direction: column;
-
       align-items: center;
-
       justify-content: center;
 
       user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .tap-icon {
@@ -218,7 +191,7 @@
       font-size: 11px;
     }
 
-    /* +1 */
+    /* +1 ANIMATION */
 
     .plus-one {
       position: fixed;
@@ -226,11 +199,11 @@
 
       font-size: 28px;
       font-weight: 900;
+
       color: #00e5ff;
 
       animation:
-        plusOne 0.8s ease-out
-        forwards;
+        plusOne .8s ease-out forwards;
 
       z-index: 999;
     }
@@ -250,7 +223,6 @@
           translateY(-100px)
           scale(1.4);
       }
-
     }
 
     .footer {
@@ -265,6 +237,8 @@
 <body>
 
   <div class="app">
+
+    <!-- LOGO -->
 
     <div class="logo">
       N
@@ -299,17 +273,23 @@
     <div class="limit-info">
 
       <div class="limit-count">
+
         <span id="remaining">
           1000
         </span>
+
         / 1000 REQUESTS
+
       </div>
 
       <div class="timer">
+
         ⏳ Reset in
+
         <span id="timer">
           08:00:00
         </span>
+
       </div>
 
     </div>
@@ -369,21 +349,14 @@
 
     let points =
       Number(
-        localStorage.getItem(
-          "nexo_points"
-        )
+        localStorage.getItem("nexo_points")
       ) || 0;
 
-
-    document.getElementById(
-      "points"
-    ).innerText =
+    document.getElementById("points").innerText =
       points.toLocaleString();
 
 
-    /* =========================
-       8 HOUR LIMIT
-    ========================= */
+    /* LIMIT */
 
     const MAX_REQUESTS = 1000;
 
@@ -407,7 +380,7 @@
       );
 
 
-    /* FIRST START */
+    /* CHECK LIMIT */
 
     if (
       !remaining ||
@@ -415,11 +388,12 @@
       remaining > MAX_REQUESTS
     ) {
 
-      remaining =
-        MAX_REQUESTS;
+      remaining = MAX_REQUESTS;
 
     }
 
+
+    /* START NEW 8 HOUR WINDOW */
 
     if (
       !resetAt ||
@@ -427,14 +401,15 @@
     ) {
 
       resetAt =
-        Date.now() +
-        EIGHT_HOURS;
+        Date.now() + EIGHT_HOURS;
 
       remaining =
         MAX_REQUESTS;
 
     }
 
+
+    /* SAVE */
 
     function saveLimit() {
 
@@ -450,6 +425,8 @@
 
     }
 
+
+    /* UPDATE SCREEN */
 
     function updateLimit() {
 
@@ -491,10 +468,13 @@
       document.getElementById(
         "timer"
       ).innerText =
+
         String(hours).padStart(2, "0")
-        + ":" +
+        + ":"
+        +
         String(minutes).padStart(2, "0")
-        + ":" +
+        + ":"
+        +
         String(seconds).padStart(2, "0");
 
 
@@ -519,18 +499,15 @@
       }
 
 
-      /* RESET AFTER 8 HOURS */
+      /* RESET */
 
-      if (
-        timeLeft <= 0
-      ) {
+      if (timeLeft <= 0) {
 
         remaining =
           MAX_REQUESTS;
 
         resetAt =
-          Date.now() +
-          EIGHT_HOURS;
+          Date.now() + EIGHT_HOURS;
 
         saveLimit();
 
@@ -539,10 +516,10 @@
     }
 
 
-    /* UPDATE EVERY SECOND */
+    /* TIMER */
 
     setInterval(
-      function() {
+      function () {
 
         updateLimit();
 
@@ -556,34 +533,37 @@
     saveLimit();
 
 
-    /* =========================
-       TAP
-    ========================= */
+    /* TAP */
 
     function tapForPoint(event) {
 
-      /* LIMIT */
-
-      if (
-        remaining <= 0
-      ) {
+      if (remaining <= 0) {
 
         return;
 
       }
 
 
-      /* ONE REQUEST */
+      /* REMOVE FOCUS */
+
+      if (
+        document.activeElement
+      ) {
+
+        document.activeElement.blur();
+
+      }
+
+
+      /* REMOVE ONE REQUEST */
 
       remaining--;
 
 
-      /* ONE POINT */
+      /* ADD POINT */
 
       points++;
 
-
-      /* SAVE */
 
       localStorage.setItem(
         "nexo_points",
@@ -593,8 +573,6 @@
 
       saveLimit();
 
-
-      /* UPDATE */
 
       document.getElementById(
         "points"
@@ -608,9 +586,7 @@
       /* +1 ANIMATION */
 
       const plus =
-        document.createElement(
-          "div"
-        );
+        document.createElement("div");
 
 
       plus.className =
@@ -635,7 +611,7 @@
 
 
       setTimeout(
-        function() {
+        function () {
 
           plus.remove();
 
@@ -648,4 +624,5 @@
   </script>
 
 </body>
+
 </html>
