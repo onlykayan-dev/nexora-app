@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -94,7 +93,6 @@
 
       cursor: pointer;
       user-select: none;
-      touch-action: manipulation;
 
       transition: transform 0.08s;
     }
@@ -130,7 +128,6 @@
       background: #11111b;
       color: white;
       font-size: 12px;
-      cursor: pointer;
     }
 
     .menu button:active {
@@ -148,14 +145,6 @@
       border-radius: 12px;
       display: none;
       white-space: nowrap;
-      z-index: 100;
-    }
-
-    .queue {
-      margin-top: 8px;
-      color: #7467ff;
-      font-size: 12px;
-      min-height: 16px;
     }
   </style>
 </head>
@@ -167,7 +156,7 @@
     <div class="header">
       <div class="logo-title">NEXORA</div>
 
-      <button class="profile" type="button">
+      <button class="profile">
         👤
       </button>
     </div>
@@ -182,15 +171,12 @@
 
     <div class="tap-container">
 
-      <div
-        class="tap-circle"
-        id="tapButton"
-        role="button"
-        aria-label="Tap to earn"
-      >
+      <div class="tap-circle" onclick="tapEarn()">
+
         <div class="nexora-logo">
           NEXORA
         </div>
+
       </div>
 
     </div>
@@ -199,19 +185,17 @@
       TAP TO EARN +1
     </div>
 
-    <div class="queue" id="queue"></div>
-
     <div class="menu">
 
-      <button type="button" onclick="showMessage('Tasks coming soon')">
+      <button onclick="showMessage('Tasks coming soon')">
         📋 Tasks
       </button>
 
-      <button type="button" onclick="showMessage('Referral coming soon')">
+      <button onclick="showMessage('Referral coming soon')">
         👥 Referral
       </button>
 
-      <button type="button" onclick="showMessage('Ranking coming soon')">
+      <button onclick="showMessage('Ranking coming soon')">
         🏆 Ranking
       </button>
 
@@ -222,366 +206,46 @@
   <div class="message" id="message"></div>
 
   <script>
-    // ==============================
-    // NEXORA CONFIG
-    // ==============================
 
-    const API_URL =
-      "https://zpejsrxapxozwpeyvfbw.supabase.co/functions/v1/super-action";
-
-    const MAX_REQUESTS = 1000;
-    const WINDOW_MS = 8 * 60 * 60 * 1000;
-
-
-    // ==============================
-    // TELEGRAM
-    // ==============================
-
-    let telegramUser = null;
-
+    // Telegram Mini App
     if (window.Telegram && window.Telegram.WebApp) {
       Telegram.WebApp.ready();
       Telegram.WebApp.expand();
-
-      if (Telegram.WebApp.initDataUnsafe &&
-          Telegram.WebApp.initDataUnsafe.user) {
-
-        telegramUser = Telegram.WebApp.initDataUnsafe.user;
-      }
     }
 
-
-    // ==============================
-    // LOCAL DATA
-    // ==============================
-
+    // Load saved points
     let points = Number(
       localStorage.getItem("nexora_points") || 0
     );
 
-    let remaining = Number(
-      localStorage.getItem("nexora_remaining") || MAX_REQUESTS
-    );
-
-    let resetAt = Number(
-      localStorage.getItem("nexora_resetAt") || 0
-    );
-
-
-    // ==============================
-    // TAP QUEUE
-    // ==============================
-
-    let tapQueue = 0;
-    let processing = false;
-
-
-    // ==============================
-    // INITIALIZE
-    // ==============================
-
-    checkLimit();
     updatePoints();
-    updateQueue();
 
 
-    // ==============================
-    // TAP BUTTON
-    // ==============================
-
-    document
-      .getElementById("tapButton")
-      .addEventListener("click", tapEarn);
-
-
+    // Tap to Earn
     function tapEarn() {
 
-      if (remaining <= 0) {
-        showMessage("Limit reached. Try again later.");
-        return;
-      }
+      points += 1;
 
-      tapQueue++;
+      localStorage.setItem(
+        "nexora_points",
+        points
+      );
 
-      updateQueue();
+      updatePoints();
 
-      processQueue();
     }
 
 
-    // ==============================
-    // PROCESS TAP QUEUE
-    // ==============================
-
-    async function processQueue() {
-
-      if (processing) {
-        return;
-      }
-
-      if (tapQueue <= 0) {
-        return;
-      }
-
-      processing = true;
-
-      while (tapQueue > 0 && remaining > 0) {
-
-        tapQueue--;
-
-        updateQueue();
-
-        const success = await sendTap();
-
-        if (!success) {
-          // Put failed tap back into queue
-          tapQueue++;
-
-          updateQueue();
-
-          break;
-        }
-      }
-
-      processing = false;
-    }
-
-
-    // ==============================
-    // SEND TAP TO SUPABASE
-    // ==============================
-
-    async function sendTap() {
-
-      try {
-
-        if (!telegramUser) {
-          showMessage("Open NEXORA inside Telegram.");
-          return false;
-        }
-
-        const response = await fetch(API_URL, {
-          method: "POST",
-
-          headers: {
-            "Content-Type": "application/json"
-          },
-
-          body: JSON.stringify({
-            action: "tap",
-            telegram_user: telegramUser
-          })
-        });
-
-
-        let data = null;
-
-        try {
-          data = await response.json();
-        } catch (e) {
-          throw new Error("Invalid server response");
-        }
-
-
-        if (!response.ok) {
-
-          throw new Error(
-            data && data.error
-              ? data.error
-              : "Server error " + response.status
-          );
-        }
-
-
-        if (!data || data.success !== true) {
-
-          throw new Error(
-            data && data.error
-              ? data.error
-              : "Tap failed"
-          );
-        }
-
-
-        // ==========================
-        // SERVER RESULT
-        // ==========================
-
-        const added = Number(data.added || 0);
-        const serverPoints = Number(data.points || 0);
-
-        if (added > 0) {
-
-          points += added;
-
-        } else if (serverPoints > 0) {
-
-          // Fallback if server returns points
-          points += serverPoints;
-        }
-
-
-        if (typeof data.remaining === "number") {
-          remaining = data.remaining;
-        } else {
-          remaining = Math.max(0, remaining - 1);
-        }
-
-
-        if (data.resetAt) {
-
-          const serverReset =
-            new Date(data.resetAt).getTime();
-
-          if (!Number.isNaN(serverReset)) {
-            resetAt = serverReset;
-          }
-        }
-
-
-        // ==========================
-        // SAVE
-        // ==========================
-
-        localStorage.setItem(
-          "nexora_points",
-          String(points)
-        );
-
-        localStorage.setItem(
-          "nexora_remaining",
-          String(remaining)
-        );
-
-        localStorage.setItem(
-          "nexora_resetAt",
-          String(resetAt)
-        );
-
-
-        updatePoints();
-        updateQueue();
-
-        showPlusOne();
-
-        return true;
-
-      } catch (error) {
-
-        console.error("NEXORA TAP ERROR:", error);
-
-        showMessage(
-          error.message || "Connection error"
-        );
-
-        return false;
-      }
-    }
-
-
-    // ==============================
-    // LIMIT CHECK
-    // ==============================
-
-    function checkLimit() {
-
-      if (!resetAt) {
-        remaining = MAX_REQUESTS;
-        return;
-      }
-
-      if (Date.now() >= resetAt) {
-
-        remaining = MAX_REQUESTS;
-        resetAt = 0;
-
-        localStorage.setItem(
-          "nexora_remaining",
-          String(remaining)
-        );
-
-        localStorage.setItem(
-          "nexora_resetAt",
-          "0"
-        );
-      }
-    }
-
-
-    // ==============================
-    // UPDATE POINTS
-    // ==============================
-
+    // Update points on screen
     function updatePoints() {
 
       document.getElementById("points").innerText =
         points.toLocaleString();
+
     }
 
 
-    // ==============================
-    // QUEUE DISPLAY
-    // ==============================
-
-    function updateQueue() {
-
-      const queue =
-        document.getElementById("queue");
-
-      if (tapQueue > 0) {
-
-        queue.innerText =
-          "Processing " + tapQueue + "...";
-
-      } else {
-
-        queue.innerText = "";
-      }
-    }
-
-
-    // ==============================
-    // +1 EFFECT
-    // ==============================
-
-    function showPlusOne() {
-
-      const effect =
-        document.createElement("div");
-
-      effect.innerText = "+1";
-
-      effect.style.position = "fixed";
-      effect.style.left = "50%";
-      effect.style.top = "45%";
-      effect.style.transform = "translate(-50%, -50%)";
-      effect.style.fontSize = "28px";
-      effect.style.fontWeight = "900";
-      effect.style.color = "#7467ff";
-      effect.style.pointerEvents = "none";
-      effect.style.zIndex = "9999";
-      effect.style.transition =
-        "all 0.6s ease";
-
-      document.body.appendChild(effect);
-
-      requestAnimationFrame(() => {
-
-        effect.style.top = "35%";
-        effect.style.opacity = "0";
-
-      });
-
-      setTimeout(() => {
-        effect.remove();
-      }, 650);
-    }
-
-
-    // ==============================
-    // MESSAGE
-    // ==============================
-
+    // Message
     function showMessage(text) {
 
       const message =
@@ -590,31 +254,13 @@
       message.innerText = text;
       message.style.display = "block";
 
-      clearTimeout(
-        window.nexoraMessageTimer
-      );
+      setTimeout(() => {
+        message.style.display = "none";
+      }, 1800);
 
-      window.nexoraMessageTimer =
-        setTimeout(() => {
-
-          message.style.display = "none";
-
-        }, 1800);
     }
-
-
-    // ==============================
-    // PERIODIC LIMIT CHECK
-    // ==============================
-
-    setInterval(() => {
-
-      checkLimit();
-
-    }, 1000);
 
   </script>
 
 </body>
 </html>
-```
